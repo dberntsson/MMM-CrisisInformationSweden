@@ -38,7 +38,7 @@ Module.register("MMM-CrisisInformationSweden", {
     // --------------------------------------- Start the module
     start () {
         const self = this;
-        Log.info(`Starting module: ${self.name}`);
+        Log.info(`Starting module: [${self.name}]`);
 
         // Set locale.
         moment.locale(config.language);
@@ -67,14 +67,14 @@ Module.register("MMM-CrisisInformationSweden", {
         // ------ Display a selected message in the feed
         if (this.currentFeedIndex >= this.currentFeed.length) this.currentFeedIndex = 0;
         if (this.currentFeed.length > 0) { // We have messages display the one up for displaying
-            Log.debug(`${self.name}: Trying to display feed ix: ${this.currentFeedIndex}`);
+            Log.debug(`[${self.name}]: Trying to display feed ix: ${this.currentFeedIndex}`);
             let noFeedsToDisplay = false;
             const dt = moment(this.currentFeed[this.currentFeedIndex].Published);
             if (moment().diff(dt) > this.config.oldest*24*60*60*1000) {
                 noFeedsToDisplay = this.currentFeedIndex == 0;
                 this.currentFeedIndex = 0;
             }
-            Log.debug(`${self.name}: Feed ix: ${this.currentFeedIndex} noFeedsToDisplay: ${noFeedsToDisplay}`);
+            Log.debug(`[${self.name}]: Feed ix: ${this.currentFeedIndex} noFeedsToDisplay: ${noFeedsToDisplay}`);
             if (noFeedsToDisplay) {
                 if (!this.config.silent) {
                     var div = document.createElement("div");
@@ -83,7 +83,7 @@ Module.register("MMM-CrisisInformationSweden", {
                     div.className = "dimmed xsmall";
                 }
             } else {
-                Log.debug(`${self.name}: Display feed ix: ${this.currentFeedIndex}`);
+                Log.debug(`[${self.name}]: Display feed ix: ${this.currentFeedIndex}`);
 
                 const msg = this.currentFeed[this.currentFeedIndex];
 
