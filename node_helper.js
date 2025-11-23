@@ -31,7 +31,7 @@ module.exports = NodeHelper.create({
     // --------------------------------------- Retrive new feed
     async getFeed () {
         const self = this;
-        Log.log(`${new Date(Date.now()).toLocaleTimeString()}: Getting feed for module ${self.name}`);
+        Log.log(`[${self.name}] Getting feed for module at ${new Date(Date.now()).toLocaleTimeString()}`);
         const url = "https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True";
         Log.log(`[${self.name}] Calling ${url}`);
         Log.log(`[${self.name}] With area filter config: ` + JSON.stringify(this.config.areas));
