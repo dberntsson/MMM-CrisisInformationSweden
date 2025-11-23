@@ -73,7 +73,7 @@ module.exports = NodeHelper.create({
             const feed = resp[ix];
             const areas = feed.Area;
             Log.debug("Looking at "+ feed.Identifier);
-            if (areas === undefined || areas === null) inc = true; // Always include iof there's no area defined
+            if (areas === undefined || areas === null || areas.length === 0) inc = true; // Always include if there's no area(s) defined
             else {
                 for (let ia = 0; ia < areas.length; ia++) {
                     Log.debug("filter: " + JSON.stringify(areas[ia]));
