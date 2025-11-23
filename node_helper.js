@@ -31,24 +31,35 @@ module.exports = NodeHelper.create({
     async getFeed () {
         const self = this;
         Log.log(`${new Date(Date.now()).toLocaleTimeString()}: Getting feed for module ${this.name}`);
-        const opt = {
-            uri: "https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True",
-            qs: {
-            },
-            json: true
-        };
-        Log.log(`Calling ${opt.uri}`);
+        const url = "https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True";
+        Log.log(`Calling ${url}`);
 
         try {
-            const response = await fetch(opt.uri, {method: "GET"});
-            const resp = await response.json();
-            Log.debug(resp);
-            const feeds = self.filterFeed(resp);
-            Log.log(`${self.name} - Sending NEW_FEED count: ${feeds.length} Org: ${resp.length}`);
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeout);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            Log.debug(data);
+            const feeds = self.filterFeed(data);
+            Log.log(`${self.name} - Sending NEW_FEED count: ${feeds.length} Org: ${data.length}`);
             self.sendSocketNotification("NEW_FEED", feeds); // Send feed to module
-        } catch (err) {
-            Log.log(`Problems with ${self.name}: ${err}`);
-            self.sendSocketNotification("SERVICE_FAILURE", {resp: {StatusCode: 600, Message: err}});
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                // Handle timeout
+                this.sendSocketNotification("SERVICE_FAILURE", { message: "Request timed out" });
+            } else if (error.message && error.message.startsWith("HTTP error!")) {
+                // Handle HTTP error status
+                this.sendSocketNotification("SERVICE_FAILURE", { message: error.message });
+            } else {
+                // Handle other errors
+                this.sendSocketNotification("SERVICE_FAILURE", { message: error.message || "Unknown error" });
+            }
         }
     },
 
