@@ -38,7 +38,7 @@ Module.register("MMM-CrisisInformationSweden", {
     // --------------------------------------- Start the module
     start () {
         const self = this;
-        Log.info(`Starting module: [${self.name}]`);
+        Log.info(`Starting module: ${self.name}`);
 
         // Set locale.
         moment.locale(config.language);
