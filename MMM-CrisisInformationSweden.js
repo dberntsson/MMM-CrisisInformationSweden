@@ -37,7 +37,8 @@ Module.register("MMM-CrisisInformationSweden", {
 
     // --------------------------------------- Start the module
     start () {
-        Log.info(`Starting module: ${this.name}`);
+        const self = this;
+        Log.info(`Starting module: ${self.name}`);
 
         // Set locale.
         moment.locale(config.language);
@@ -47,7 +48,6 @@ Module.register("MMM-CrisisInformationSweden", {
         this.currentFeedIndex = 0;
 
         // Start timer for ui-updates
-        const self = this;
         this.uitimer = setInterval(() => { // This timer is saved in uitimer so that we can cancel it
             self.updateDom();
         }, self.config.uiUpdateInterval);
@@ -55,10 +55,11 @@ Module.register("MMM-CrisisInformationSweden", {
 
     // --------------------------------------- Generate dom for module
     getDom () {
+        const self = this;
         const wrapper = document.createElement("div");
 
         if (!this.loaded) {
-            wrapper.innerHTML = `${this.name} loading feeds ...`;
+            wrapper.innerHTML = `${self.name} loading feeds ...`;
             wrapper.className = "dimmed light small";
             return wrapper;
         }
@@ -66,24 +67,23 @@ Module.register("MMM-CrisisInformationSweden", {
         // ------ Display a selected message in the feed
         if (this.currentFeedIndex >= this.currentFeed.length) this.currentFeedIndex = 0;
         if (this.currentFeed.length > 0) { // We have messages display the one up for displaying
-            this.debug(`Trying to display feed ix: ${this.currentFeedIndex}`);
+            Log.debug(`${self.name}: Trying to display feed ix: ${this.currentFeedIndex}`);
             let noFeedsToDisplay = false;
             const dt = moment(this.currentFeed[this.currentFeedIndex].Published);
             if (moment().diff(dt) > this.config.oldest*24*60*60*1000) {
                 noFeedsToDisplay = this.currentFeedIndex == 0;
                 this.currentFeedIndex = 0;
             }
-            this.debug(`Feed ix: ${this.currentFeedIndex} noFeedsToDisplay: ${noFeedsToDisplay}`);
+            Log.debug(`${self.name}: Feed ix: ${this.currentFeedIndex} noFeedsToDisplay: ${noFeedsToDisplay}`);
             if (noFeedsToDisplay) {
                 if (!this.config.silent) {
                     var div = document.createElement("div");
-                    div.innerHTML = `${this.name}: There are no messages younger than ${this.config.oldest} days`;
+                    div.innerHTML = `${self.name}: There are no messages younger than ${this.config.oldest} days`;
                     //div.style.color = "red"; // TODO Change this to a custom style
                     div.className = "dimmed xsmall";
-                    wrapper.appendChild(div);
                 }
             } else {
-                this.debug(`Display feed ix: ${this.currentFeedIndex}`);
+                Log.debug(`${self.name}: Display feed ix: ${this.currentFeedIndex}`);
 
                 const msg = this.currentFeed[this.currentFeedIndex];
 

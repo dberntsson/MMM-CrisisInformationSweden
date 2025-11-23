@@ -15,7 +15,8 @@ const NodeHelper = require("node_helper");
 module.exports = NodeHelper.create({
     // --------------------------------------- Start the helper
     start () {
-        Log.log(`Starting helper: ${this.name}`);
+        const self = this;
+        Log.log(`Starting helper: ${self.name}`);
         this.started = false;
     },
 
@@ -30,9 +31,11 @@ module.exports = NodeHelper.create({
     // --------------------------------------- Retrive new feed
     async getFeed () {
         const self = this;
-        Log.log(`${new Date(Date.now()).toLocaleTimeString()}: Getting feed for module ${this.name}`);
+        Log.log(`${new Date(Date.now()).toLocaleTimeString()}: Getting feed for module ${self.name}`);
         const url = "https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True";
-        Log.log(`Calling ${url}`);
+        Log.log(`[${self.name}] Calling ${url}`);
+        Log.log(`[${self.name}] With area filter config: ` + JSON.stringify(this.config.areas));
+        Log.log(`[${self.name}] With alwaysNational filter config: ` + this.config.alwaysNational);
 
         try {
             const controller = new AbortController();
@@ -47,7 +50,7 @@ module.exports = NodeHelper.create({
             const data = await response.json();
             Log.debug(data);
             const feeds = self.filterFeed(data);
-            Log.log(`${self.name} - Sending NEW_FEED count: ${feeds.length} Org: ${data.length}`);
+            Log.log(`[${self.name}] - Sending NEW_FEED count: ${feeds.length} Org: ${data.length}`);
             self.sendSocketNotification("NEW_FEED", feeds); // Send feed to module
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -65,18 +68,19 @@ module.exports = NodeHelper.create({
 
     // --------------------------------------- Filter feeds according to config
     filterFeed (resp) {
+        const self = this;
         if (this.config.areas === undefined || this.config.areas.length < 1) return resp;
         const feeds = [];
         for (let ix = 0; ix < resp.length; ix++) {
-            Log.debug("MSB: " + ix);
+            Log.debug(`[${self.name}] MSB: ` + ix);
             let inc = false;
             const feed = resp[ix];
             const areas = feed.Area;
-            Log.debug("Looking at "+ feed.Identifier);
+            Log.debug(`[${self.name}] Looking at `+ feed.Identifier);
             if (areas === undefined || areas === null || areas.length === 0) inc = true; // Always include if there's no area(s) defined
             else {
                 for (let ia = 0; ia < areas.length; ia++) {
-                    Log.debug("filter: " + JSON.stringify(areas[ia]));
+                    Log.debug(`[${self.name}] filter: ` + JSON.stringify(areas[ia]));
                     for (let iad = 0; iad < this.config.areas.length; iad++) {
                         if (areas[ia].Type == "County" && areas[ia].Description == this.config.areas[iad]) inc = true;
                     }
