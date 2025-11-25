@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Pejjo/MMM-CrisisInformationSweden/issues"
   },
-  "homepage": "https://github.com/Pejjo/MMM-CrisisInformationSweden#readme"
+  "homepage": "https://github.com/Pejjo/MMM-CrisisInformationSweden#readme",
+  "dependencies": {
+        "moment":"^2.30.1"
+    }
 }
