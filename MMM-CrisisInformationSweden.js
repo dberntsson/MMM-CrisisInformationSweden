@@ -27,6 +27,7 @@ Module.register("MMM-CrisisInformationSweden", {
         oldest: 7,                      // Optional. Dont show messages older then this number of days.
         silent: false,                  // Optional. If enabled no messages are shown if therer are no
                                         // messages younger then 'oldest' setting
+        filterContent: [],              // A list of strings to filter (away) from the information feed
 
     },
 

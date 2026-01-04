@@ -69,13 +69,25 @@ module.exports = NodeHelper.create({
     filterFeed (feed) {
         const self = this;
         Log.debug(`[${self.name}] Filtering feed: ${JSON.stringify(feed)}`);
-        if (self.config.areas === undefined || self.config.areas.length < 1) return feed;
+        
+        const hasAreaFilter = Array.isArray(self.config.areas) && self.config.areas.length > 0;
+        const hasContentFilter = Array.isArray(self.config.filterContent) && self.config.filterContent.length > 0;
         
         const filteredFeed = [];
         for (let ix = 0; ix < feed.length; ix++) {
             const feedItem = feed[ix];
             Log.debug(`[${self.name}] Looking at ` + feedItem.Identifier);
-            if (areaFilter(self.config, feedItem.Area)) filteredFeed.push(feedItem);
+
+            if (!hasAreaFilter || areaFilter(self.config, feedItem.Area)) {
+                //Feed item matches area filter
+
+                if (!hasContentFilter || contentFilter(self.config, feedItem.Preamble)) {
+                    //Feed item also passes the content filter
+
+                    //Return feed item
+                    filteredFeed.push(feedItem);
+                }
+            } 
         }
         return filteredFeed;
 
@@ -94,6 +106,24 @@ module.exports = NodeHelper.create({
                 if (cfg.alwaysNational && areas[feedItemAreasIx].Type === "Country" && areas[feedItemAreasIx].Description === "Sverige") return true;
             }
             return false;
+        }
+
+        /**
+         * This filter determine if the feed item should be excluted based on the content filter strings
+         * The config can contain a list of strings to exclude. If the feed item contain a string from the configuration, it will be excluded.
+         */
+        function contentFilter(cfg, preamble) {
+            if (!preamble || typeof preamble !== "string") return true;
+
+            const filters = cfg.filterContent.map(f => f.toLowerCase());
+            const text = preamble.toLowerCase();
+
+            for (let i = 0; i < filters.length; i++) {
+                if (text.includes(filters[i])) {
+                    return false; // EXCLUDE feed item
+                }
+            }
+            return true; // INCLUDE feed item
         }
     },
 

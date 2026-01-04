@@ -33,6 +33,7 @@ Here is an example for an entry in the modules array in your `config.js`:
             oldest: 7,                      // Optional. Dont show messages older then this number of days.
             silent: false,                  // Optional. If enabled no messages are shown if therer are no
                                             // messages younger then 'oldest' setting
+            filterContent: [],              // A list of strings to filter (away) from the information feed
             debug: false,                   // Optional. Enable some extra output when debugging
         }
     },
