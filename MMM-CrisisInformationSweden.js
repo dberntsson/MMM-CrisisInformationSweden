@@ -161,7 +161,7 @@ Module.register("MMM-CrisisInformationSweden", {
 
     // --------------------------------------- Debug output
     debug (msg) {
-        if (this.config.debug) Log.log(`[${this.name}] ${msg}`);
+        if (this.config.debug) Log.log(`${msg}`);
     },
 
     // --------------------------------------- Handle socketnotifications

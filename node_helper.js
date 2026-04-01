@@ -32,8 +32,8 @@ module.exports = NodeHelper.create({
     async getFeed () {
         const self = this;
         const url = "https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True";
-        Log.log(`[${self.name}] Calling ${url}`);
-        Log.debug(`[${self.name}]   With config: ` + JSON.stringify(this.config));
+        Log.log(`Calling ${url}`);
+        Log.debug(`   With config: ` + JSON.stringify(this.config));
 
         try {
             const controller = new AbortController();
@@ -46,10 +46,10 @@ module.exports = NodeHelper.create({
             }
 
             const feed = await response.json();
-            Log.debug(`[${self.name}] ${feed}`);
+            Log.debug(`${feed}`);
             
             const filteredFeed = self.filterFeed(feed);
-            Log.log(`[${self.name}] Sending ${filteredFeed.length} (of ${feed.length}) filtered feed items to module (NEW_FEED)`);
+            Log.log(`Sending ${filteredFeed.length} (of ${feed.length}) filtered feed items to module (NEW_FEED)`);
             self.sendSocketNotification("NEW_FEED", filteredFeed); // Send feed to module
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -68,7 +68,7 @@ module.exports = NodeHelper.create({
     // --------------------------------------- Filter feeds according to config
     filterFeed (feed) {
         const self = this;
-        Log.debug(`[${self.name}] Filtering feed: ${JSON.stringify(feed)}`);
+        Log.debug(`Filtering feed: ${JSON.stringify(feed)}`);
         
         const hasAreaFilter = Array.isArray(self.config.areas) && self.config.areas.length > 0;
         const hasContentFilter = Array.isArray(self.config.filterContent) && self.config.filterContent.length > 0;
@@ -76,7 +76,7 @@ module.exports = NodeHelper.create({
         const filteredFeed = [];
         for (let ix = 0; ix < feed.length; ix++) {
             const feedItem = feed[ix];
-            Log.debug(`[${self.name}] Looking at ` + feedItem.Identifier);
+            Log.debug(`Looking at ` + feedItem.Identifier);
 
             if (!hasAreaFilter || areaFilter(self.config, feedItem.Area)) {
                 //Feed item matches area filter
@@ -98,7 +98,7 @@ module.exports = NodeHelper.create({
         function areaFilter(cfg, areas) {
             if (!Array.isArray(areas) || areas.length === 0) return true; // Always include if no areas defined
             for (let feedItemAreasIx = 0; feedItemAreasIx < areas.length; feedItemAreasIx++) {
-                Log.debug(`[${self.name}] areaFilter called with cfg: ${JSON.stringify(cfg.areas)}, areas: ${JSON.stringify(areas[feedItemAreasIx].Description)}`);
+                Log.debug(`areaFilter called with cfg: ${JSON.stringify(cfg.areas)}, areas: ${JSON.stringify(areas[feedItemAreasIx].Description)}`);
                 for (let cfgAreasIx = 0; cfgAreasIx < cfg.areas.length; cfgAreasIx++) {
                     if (areas[feedItemAreasIx].Type == "County" && areas[feedItemAreasIx].Description == cfg.areas[cfgAreasIx]) return true;
                 }
@@ -129,7 +129,7 @@ module.exports = NodeHelper.create({
 
     // --------------------------------------- Handle notifications
     socketNotificationReceived (notification, payload) {
-        Log.debug(`[${this.name}] Module helper received notification: ${notification}`);
+        Log.debug(`Module helper received notification: ${notification}`);
         const self = this;
         if (notification === "CONFIG" && this.started === false) {
             this.config = payload;
