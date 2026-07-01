@@ -1,0 +1,44 @@
+[
+	{
+		"Identifier": "23303",
+		"ContentId": 23303,
+		"ContentTypeName": "newspage",
+		"PushMessage": "Det är stora störningar i tågtrafiken mellan Malmö och Hässleholm på grund av ett elfel. Inställda tåg och omfattande förseningar förekommer. ",
+		"Updated": "2026-06-27T21:16:53+02:00",
+		"Published": "2026-06-27T21:16:53+02:00",
+		"Headline": "Stora störningar i tågtrafiken i Skåne",
+		"Preamble": "Det är stora störningar i tågtrafiken mellan Malmö och Hässleholm på grund av ett elfel. Inställda tåg och omfattande förseningar förekommer. ",
+		"BodyText": "\nÄven andra tågsträckor i Skåne påverkas med inställda tåg och förseningar. Reparatörer är på plats och arbetar med felet, trafiken förväntas återgå till det normala igen från kl. 13.00 på söndagen skriver SJ.\n\n\nKontakta ditt tågbolag för information om din resa, skriver Trafikverket. \n\n",
+		"ImageLink": "",
+		"Links": [
+			{
+				"Text": "Trafikverket: Stora störningar i tågtrafiken mellan Malmö och Hässleholm",
+				"Url": "https: //www.trafikverket.se/"
+			},
+			{
+				"Text": "SJ: Förseningar mellan Malmö och Lund på grund av elfel",
+				"Url": "https://www.sj.se/trafikinformation/storning-station/Malm%C3%B6%20C/MC/56075?station=Malm%C3%B6+C&date=2026-06-27"
+			},
+			{
+				"Text": "Öresundståg",
+				"Url": "https://www.oresundstag.se/"
+			}
+		],
+		"Area": [
+			{
+				"Type": "County",
+				"Description": "Skåne län",
+				"GeometryInformation": null
+			}
+		],
+		"TargetedAppVersions": null,
+		"Web": "https://www.krisinformation.se/nyheter/2026/juni2/stora-storningar-i-tagtrafiken-i-skane/",
+		"Language": "sv",
+		"Event": "News",
+		"SenderName": "trafikverket",
+		"BodyLinks": [],
+		"SourceID": 0,
+		"IsTest": false,
+		"Push": false
+	}
+]

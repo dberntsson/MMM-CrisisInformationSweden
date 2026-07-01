@@ -1,0 +1,193 @@
+[
+  {
+    "id": 1,
+    "normalProbability": true,
+    "event": {
+      "sv": "Vind",
+      "en": "Wind",
+      "code": "WIND",
+      "mhoClassification": {
+        "sv": "Meteorologi",
+        "en": "Meteorology",
+        "code": "MET"
+      }
+    },
+    "descriptions": [],
+    "warningAreas": [
+      {
+        "id": 1,
+        "approximateStart": "2026-06-27T08:00:00.000Z",
+        "approximateEnd": "2026-06-29T08:00:00.000Z",
+        "published": "2021-09-20T09:08:40.862Z",
+        "normalProbability": true,
+        "areaName": {
+          "sv": "TEST Västra Götalands län",
+          "en": "TEST Västra Götaland County"
+        },
+        "warningLevel": { "sv": "Gul", "en": "Yellow", "code": "YELLOW" },
+        "eventDescription": { "sv": "Vind", "en": "Wind", "code": "WIND" },
+        "affectedAreas": [
+          {
+            "id": 14,
+            "sv": "Västra Götalands län",
+            "en": "Västra Götaland County"
+          }
+        ],
+        "descriptions": [
+          {
+            "title": {
+              "sv": "Vad händer",
+              "en": "What happens",
+              "code": "HAPPENS"
+            },
+            "text": {
+              "sv": "TEST I samband med ett lågtryck som passerar österut kommer vinden under förmiddagen att öka västerifrån och byvinden väntas nå stormstyrka på många platser. I Halland och Skåne nås kulmen mitt på dagen. I Kronobergs län, Kalmar län och Blekinge län nås kulmen något senare på eftermiddagen. Under kvällen avtar vinden snabbt västerifrån.",
+              "en": "TEST In connection with a low pressure that passes to the east, the wind will increase from the west during the morning and the village wind is expected to reach storm strength in many places. In Halland and Skåne, the peak is reached in the middle of the day. In Kronoberg County, Kalmar County and Blekinge County, the peak is reached somewhat later in the afternoon. During the evening the wind decreases rapidly from the west."
+            }
+          },
+          {
+            "title": {
+              "sv": "Händelsebeskrivning",
+              "en": "Description of incident",
+              "code": "INCIDENT"
+            },
+            "text": {
+              "sv": "TESTMEDDELANDE Under torsdagen väntas tilltagande västlig vind med byvindar upp till stormstyrka som bland annat medför risk för nedfallna träd, begränsad framkomlighet i trafiken och risk för flygande föremål. Vinden avtar västerifrån under kvällen.",
+              "en": "TEST PLEASE DISREGARD During Thursday, increasing westerly winds with village winds up to storm strength are expected, which among other things entails a risk of fallen trees, limited passability in traffic and a risk of flying objects. The wind decreases from the west during the evening."
+            }
+          },
+          {
+            "title": {
+              "sv": "Hur kan det påverka mig",
+              "en": "What to expect",
+              "code": "AFFECT"
+            },
+            "text": {
+              "sv": "TEST Begränsad framkomlighet på vägar på grund av nedfallna träd.\nRisk för förseningar inom buss-, tåg-, flyg- och färjetrafiken samt inställda avgångar.\nOmråden med luftburna elledningar kan påverkas och ge störningar i el- och teleförsörjningen.\nLösa föremål och tillfälliga konstruktioner riskerar att förflyttas eller skadas.\nVissa skador på skog (hyggeskanter och nygallrad skog). Enstaka träd eller grenar ramlar ner.",
+              "en": "TEST Risk for road blockages due to fallen trees.\nRisk of delays in bus-, train-, air- and ferry traffic as well as canceled departures.\nAreas with overground power lines can be affected and cause disturbances in the electricity- and telecommunications supply.\nLoose objects and temporary constructions are at risk of being moved or damaged.\nSome damage to forest (felling edges and newly thinned forest). Single trees or branches may fall down."
+            }
+          },
+          {
+            "title": {
+              "sv": "Kommentar",
+              "en": "Comments",
+              "code": "COMMENTS"
+            },
+            "text": {
+              "sv": "TEST Lågtryckets exakta utveckling är fortfarande svårbedömd. Små förändringar i lågtryckets bana och utveckling kan få stor påverkan på var det blir som blåsigast och hur blåsigt det blir.",
+              "en": "TEST The exact development of low pressure is still difficult to assess. Small changes in the trajectory and development of low pressure can have a major impact on where it becomes most windy and how windy it becomes."
+            }
+          },
+          {
+            "title": { "sv": "Var", "en": "Where", "code": "WHERE" },
+            "text": {
+              "sv": "TEST Hallands län, Skåne län, Kronobergs län, Blekinge län och Kalmar län, inklusive Öland.",
+              "en": "TEST Halland County, Skåne County, Kronoberg County, Blekinge County and Kalmar County, including Öland."
+            }
+          }
+        ],
+        "area": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [12.44751, 57.762799],
+                [13.161621, 57.809651],
+                [12.744141, 58.019737],
+                [12.44751, 57.762799]
+              ]
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "normalProbability": true,
+    "event": {
+      "sv": "Medelvind till havs",
+      "en": "Wind at sea",
+      "code": "WIND_SEA",
+      "mhoClassification": {
+        "sv": "Meteorologi",
+        "en": "Meteorology",
+        "code": "MET"
+      }
+    },
+    "descriptions": [],
+    "warningAreas": [
+      {
+        "id": 4,
+        "approximateStart": "2026-06-27T08:00:00.000Z",
+        "approximateEnd": "2026-06-30T08:00:00.000Z",
+        "published": "2021-09-20T09:10:16.237Z",
+        "normalProbability": true,
+        "areaName": { "sv": "TEST Kattegatt", "en": "TEST Kattegatt" },
+        "warningLevel": { "sv": "Gul", "en": "Yellow", "code": "YELLOW" },
+        "eventDescription": {
+          "sv": "Kuling 14-17 m/s",
+          "en": "Near gale 14-17 m/s",
+          "code": "GALE_LOW"
+        },
+        "affectedAreas": [
+          { "id": 56, "sv": "Kattegatt", "en": "Kattegat" }
+        ],
+        "descriptions": [
+          {
+            "title": {
+              "sv": "Händelsebeskrivning",
+              "en": "Description of incident",
+              "code": "INCIDENT"
+            },
+            "text": {
+              "sv": "TESTMEDDELANDE Från torsdag förmiddag till torsdag eftermiddag sydväst ca 15 m/s.",
+              "en": "TEST NOTICE From Thursday morning to Thursday afternoon southwest about 15 m / s."
+            }
+          },
+          {
+            "title": {
+              "sv": "Hur kan det påverka mig",
+              "en": "What to expect",
+              "code": "AFFECT"
+            },
+            "text": {
+              "sv": "TEST Problem för fritidsbåtar och små yrkesfartyg.",
+              "en": "TEST Problem for leisure boats and small commercial vessels."
+            }
+          },
+          {
+            "title": {
+              "sv": "Kommentar",
+              "en": "Comments",
+              "code": "COMMENTS"
+            },
+            "text": { "sv": "TEST", "en": "TEST" }
+          },
+          {
+            "title": { "sv": "Var", "en": "Where", "code": "WHERE" },
+            "text": {
+              "sv": "TEST Västra delen av Kattegatt",
+              "en": "TEST The western part of the Kattegat"
+            }
+          }
+        ],
+        "area": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [11.052246, 56.909002],
+                [11.348877, 56.716566],
+                [11.447754, 57.010833],
+                [11.052246, 56.909002]
+              ]
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

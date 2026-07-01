@@ -11,6 +11,14 @@
  */
 const Log = require("logger");
 const NodeHelper = require("node_helper");
+const {
+    formatSMHIFeed: formatSMHIFeedLib,
+    filterSMHIFeed: filterSMHIFeedLib,
+} = require("./lib/smhiFeedUtils");
+const {
+    formatKrisinformationFeed: formatKrisinformationFeedLib,
+    filterKrisinformationFeed: filterKrisinformationFeedLib,
+} = require("./lib/krisinformationFeedUtils");
 
 module.exports = NodeHelper.create({
     // --------------------------------------- Start the helper
@@ -24,17 +32,64 @@ module.exports = NodeHelper.create({
     scheduleUpdate () {
         const self = this;
         this.updatetimer = setInterval(() => { // This timer is saved in uitimer so that we can cancel it
-            self.getFeed();
+            self.getAllFeeds();
         }, self.config.updateInterval);
     },
 
-    // --------------------------------------- Retrive new feed
-    async getFeed () {
+
+    async getAllFeeds () {
+        const self = this;
+
+        const [feed1, feed2] = await Promise.all([
+            this.config.fetchKrisinformationFeed
+                ? this.getKrisinformationFeed()
+                : Promise.resolve([]),
+            this.config.fetchSMHIFeed
+                ? this.getSMHIFeed()
+                : Promise.resolve([])
+        ]);
+
+        const filteredFeed = [...feed1, ...feed2];
+        self.sendSocketNotification("NEW_FEED", filteredFeed); // Send feed to module
+    },
+
+    // --------------------------------------- Retrive weatherwarnings from SMHI.se
+    async getSMHIFeed () {
+        const self = this;
+        const url = "https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json";
+        Log.log(`Calling ${url}`);
+        Log.debug(`   With config: ` + JSON.stringify(this.config));
+
+        //Fetch the feed from SMHI.se
+        const feed = await this.fetchFeed(url);
+
+        // Format and filter the SMHI feed according to the configuration
+        const formattedFeed = self.formatSMHIFeed(feed, this.config);
+        const filteredFeed = self.filterSMHIFeed(formattedFeed, this.config);
+
+        Log.log(`Sending ${filteredFeed.length} (of ${formattedFeed.length}) feed items from smhi to module (NEW_FEED)`);
+        return filteredFeed;
+    },
+
+    // --------------------------------------- Retrive feed from Krisinformation.se
+    async getKrisinformationFeed () {
         const self = this;
         const url = "https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True";
         Log.log(`Calling ${url}`);
         Log.debug(`   With config: ` + JSON.stringify(this.config));
 
+        //Fetch the feed from Krisinformation.se
+        const feed = await this.fetchFeed(url);
+
+        //Filter the feed according to the configuration
+        const formattedFeed = self.formatKrisinformationFeed(feed, this.config);
+        const filteredFeed = self.filterKrisinformationFeed(formattedFeed, this.config);
+
+        Log.log(`Sending ${filteredFeed.length} (of ${formattedFeed.length}) feed items from Krisinformation to module (NEW_FEED)`);
+        return filteredFeed;
+    },
+
+    async fetchFeed (url) {
         try {
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout
@@ -47,10 +102,8 @@ module.exports = NodeHelper.create({
 
             const feed = await response.json();
             Log.debug(`${feed}`);
+            return feed;
             
-            const filteredFeed = self.filterFeed(feed);
-            Log.log(`Sending ${filteredFeed.length} (of ${feed.length}) filtered feed items to module (NEW_FEED)`);
-            self.sendSocketNotification("NEW_FEED", filteredFeed); // Send feed to module
         } catch (error) {
             if (error.name === 'AbortError') {
                 // Handle timeout
@@ -65,67 +118,29 @@ module.exports = NodeHelper.create({
         }
     },
 
-    // --------------------------------------- Filter feeds according to config
-    filterFeed (feed) {
-        const self = this;
-        Log.debug(`Filtering feed: ${JSON.stringify(feed)}`);
-        
-        const hasAreaFilter = Array.isArray(self.config.areas) && self.config.areas.length > 0;
-        const hasContentFilter = Array.isArray(self.config.filterContent) && self.config.filterContent.length > 0;
-        
-        const filteredFeed = [];
-        for (let ix = 0; ix < feed.length; ix++) {
-            const feedItem = feed[ix];
-            Log.debug(`Looking at ` + feedItem.Identifier);
-
-            if (!hasAreaFilter || areaFilter(self.config, feedItem.Area)) {
-                //Feed item matches area filter
-
-                if (!hasContentFilter || contentFilter(self.config, feedItem.Preamble)) {
-                    //Feed item also passes the content filter
-
-                    //Return feed item
-                    filteredFeed.push(feedItem);
-                }
-            } 
-        }
-        return filteredFeed;
-
-        /**
-         * A filter function to determine if a feed item should be included based on areas in config
-         * The config can contain a list of areas to include. If the feed item has any area matching one of those, it is included.
-         */
-        function areaFilter(cfg, areas) {
-            if (!Array.isArray(areas) || areas.length === 0) return true; // Always include if no areas defined
-            for (let feedItemAreasIx = 0; feedItemAreasIx < areas.length; feedItemAreasIx++) {
-                Log.debug(`areaFilter called with cfg: ${JSON.stringify(cfg.areas)}, areas: ${JSON.stringify(areas[feedItemAreasIx].Description)}`);
-                for (let cfgAreasIx = 0; cfgAreasIx < cfg.areas.length; cfgAreasIx++) {
-                    if (areas[feedItemAreasIx].Type == "County" && areas[feedItemAreasIx].Description == cfg.areas[cfgAreasIx]) return true;
-                }
-                //National area special case
-                if (cfg.alwaysNational && areas[feedItemAreasIx].Type === "Country" && areas[feedItemAreasIx].Description === "Sverige") return true;
-            }
-            return false;
-        }
-
-        /**
-         * This filter determine if the feed item should be excluted based on the content filter strings
-         * The config can contain a list of strings to exclude. If the feed item contain a string from the configuration, it will be excluded.
-         */
-        function contentFilter(cfg, preamble) {
-            if (!preamble || typeof preamble !== "string") return true;
-
-            const filters = cfg.filterContent.map(f => f.toLowerCase());
-            const text = preamble.toLowerCase();
-
-            for (let i = 0; i < filters.length; i++) {
-                if (text.includes(filters[i])) {
-                    return false; // EXCLUDE feed item
-                }
-            }
-            return true; // INCLUDE feed item
-        }
+    formatSMHIFeed (feed, config = {}) {
+        return formatSMHIFeedLib(feed, config);
     },
+
+    filterSMHIFeed (feed, config) {
+        return filterSMHIFeedLib(feed, config);
+    },
+
+    formatKrisinformationFeed (feed) {
+        return formatKrisinformationFeedLib(feed);
+    },
+
+    filterKrisinformationFeed (feed, config) {
+        return filterKrisinformationFeedLib(feed, config);
+    },
+
+    filterBasedOnTime(feed, config) {
+        if (!Array.isArray(feed)) return [];
+        // Implementation for filtering based on time
+        
+    },
+
+    // --------------------------------------- Handle notifications
 
     // --------------------------------------- Handle notifications
     socketNotificationReceived (notification, payload) {
@@ -135,7 +150,7 @@ module.exports = NodeHelper.create({
             this.config = payload;
             this.started = true;
             self.scheduleUpdate();
-            self.getFeed(); // Get get the feed for the first time
+            self.getAllFeeds(); // Get get the feed for the first time
         }
         if (notification === "CIS_LOG") {
             Log.log(payload);
