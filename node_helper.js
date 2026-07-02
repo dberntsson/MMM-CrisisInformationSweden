@@ -11,6 +11,8 @@
  */
 const Log = require("logger");
 const NodeHelper = require("node_helper");
+const fs = require("node:fs/promises");
+const path = require("node:path");
 const {
     formatSMHIFeed: formatSMHIFeedLib,
     filterSMHIFeed: filterSMHIFeedLib,
@@ -19,6 +21,10 @@ const {
     formatKrisinformationFeed: formatKrisinformationFeedLib,
     filterKrisinformationFeed: filterKrisinformationFeedLib,
 } = require("./lib/krisinformationFeedUtils");
+const {
+    formatDemoFeed: formatDemoFeedLib,
+    filterDemoFeed: filterDemoFeedLib,
+} = require("./lib/demoFeedUtils");
 
 module.exports = NodeHelper.create({
     // --------------------------------------- Start the helper
@@ -40,16 +46,41 @@ module.exports = NodeHelper.create({
     async getAllFeeds () {
         const self = this;
 
-        const [feed1, feed2] = await Promise.all([
+        if (!this.config.fetchKrisinformationFeed) {
+            Log.log("Krisinformation feed disabled by config (fetchKrisinformationFeed=false)");
+        }
+        if (!this.config.fetchSMHIFeed) {
+            Log.log("SMHI feed disabled by config (fetchSMHIFeed=false)");
+        }
+        if (!this.config.fetchDemoFeed) {
+            Log.log("Demo feed disabled by config (fetchDemoFeed=false)");
+        }
+
+        const [feed1, feed2, feed3] = await Promise.all([
             this.config.fetchKrisinformationFeed
                 ? this.getKrisinformationFeed()
                 : Promise.resolve([]),
             this.config.fetchSMHIFeed
                 ? this.getSMHIFeed()
-                : Promise.resolve([])
+                : Promise.resolve([]),
+            this.config.fetchDemoFeed
+                ? this.getDemoFeed()
+                : Promise.resolve([]),
         ]);
 
-        const filteredFeed = [...feed1, ...feed2];
+        const allFeeds = [feed1, feed2, feed3]
+            .flatMap((feed) => Array.isArray(feed) ? feed : []);
+
+        // Sort the feeds by updatedTime or publishTime in descending order (most recent first)
+        const filteredFeed = allFeeds.sort((left, right) => {
+            const leftTime = Date.parse(left?.updatedTime ?? left?.publishTime ?? 0);
+            const rightTime = Date.parse(right?.updatedTime ?? right?.publishTime ?? 0);
+
+            const normalizedLeft = Number.isNaN(leftTime) ? 0 : leftTime;
+            const normalizedRight = Number.isNaN(rightTime) ? 0 : rightTime;
+            return normalizedRight - normalizedLeft;
+        });
+
         self.sendSocketNotification("NEW_FEED", filteredFeed); // Send feed to module
     },
 
@@ -89,6 +120,25 @@ module.exports = NodeHelper.create({
         return filteredFeed;
     },
 
+    // --------------------------------------- Retrive feed from local resource for demo purposes
+    async getDemoFeed () {
+        const self = this;
+        const configuredResourcePath = this.config.demoFeedResourcePath || "resources/demoFeed.json";
+        const resourcePath = path.resolve(__dirname, configuredResourcePath);
+        Log.log(`Loading demo feed resource ${resourcePath}`);
+        Log.debug(`   With config: ` + JSON.stringify(this.config));
+
+        // Fetch the feed from a local resource file
+        const feed = await this.fetchResourceFeed(resourcePath);
+
+        //Filter the feed according to the configuration
+        const formattedFeed = self.formatDemoFeed(feed, this.config);
+        const filteredFeed = self.filterDemoFeed(formattedFeed);
+
+        Log.log(`Sending ${filteredFeed.length} (of ${formattedFeed.length}) feed items from demo to module (NEW_FEED)`);
+        return filteredFeed;
+    },
+
     async fetchFeed (url) {
         try {
             const controller = new AbortController();
@@ -115,6 +165,26 @@ module.exports = NodeHelper.create({
                 // Handle other errors
                 this.sendSocketNotification("SERVICE_FAILURE", { message: error.message || "Unknown error" });
             }
+
+            return [];
+        }
+    },
+
+    async fetchResourceFeed (resourcePath) {
+        try {
+            const fileContent = await fs.readFile(resourcePath, "utf8");
+            const parsedFeed = JSON.parse(fileContent);
+
+            if (!Array.isArray(parsedFeed)) {
+                throw new Error("Resource feed must be a JSON array");
+            }
+
+            return parsedFeed;
+        } catch (error) {
+            this.sendSocketNotification("SERVICE_FAILURE", {
+                message: `Failed to read demo feed resource: ${error.message || "Unknown error"}`,
+            });
+            return [];
         }
     },
 
@@ -134,10 +204,12 @@ module.exports = NodeHelper.create({
         return filterKrisinformationFeedLib(feed, config);
     },
 
-    filterBasedOnTime(feed, config) {
-        if (!Array.isArray(feed)) return [];
-        // Implementation for filtering based on time
-        
+    filterDemoFeed (feed) {
+        return filterDemoFeedLib(feed);
+    },
+
+    formatDemoFeed (feed) {
+        return formatDemoFeedLib(feed);
     },
 
     // --------------------------------------- Handle notifications
@@ -148,6 +220,11 @@ module.exports = NodeHelper.create({
         const self = this;
         if (notification === "CONFIG" && this.started === false) {
             this.config = payload;
+            Log.log(
+                `Feed sources enabled: Krisinformation=${Boolean(this.config.fetchKrisinformationFeed)}, ` +
+                `SMHI=${Boolean(this.config.fetchSMHIFeed)}, ` +
+                `Demo=${Boolean(this.config.fetchDemoFeed)}`
+            );
             this.started = true;
             self.scheduleUpdate();
             self.getAllFeeds(); // Get get the feed for the first time

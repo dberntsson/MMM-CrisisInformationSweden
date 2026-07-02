@@ -20,15 +20,16 @@ Run `git pull` inside `../modules/MMM-CrisisInformationSweden/` directory.
 |---|---|---|---|
 |General refresh rates|updateInterval|30 * 60 * 1000 (30 min)|Milliseconds between API updates|
 |General refresh rates|uiUpdateInterval|10 * 1000|Milliseconds between changing to next announcement|
+|General behaviour|fetchDemoFeed|true|Fetch a demo/test feed to show some variations of hos data can be shown|
 |General behaviour|showDescription|true|Show message description|
 |General behaviour|descriptionMaxLength|400|Define how long description should be|
 |General behaviour|oldest|7|If the message don't have a validity time, the message will be shown for `oldest` number of days|
 |General behaviour|silent|false|If `true`, a `No messages` will be shown when the feed is empty|
 |General behaviour|filterContent|[]|A list of `String`s to filter (away) from the feed. If empty, no filter will be applied. *(case-insensitive)*|
-|Krisinformation.se|fetchKrisinformationFeed|true|If information from krisinformation.se should be fetched|
+|Krisinformation.se|fetchKrisinformationFeed|false|If information from krisinformation.se should be fetched|
 |Krisinformation.se|krisinformationInterestingAreas|[]|A list if areas to show messages regarding. If empty, all areas will be shown. *(case-insensitive)*|
 |Krisinformation.se|krisinformationAlwaysShowNational|true|Show national messages|
-|SMHI.se|fetchSMHIFeed|true|If information from smhi.se should be fetched|
+|SMHI.se|fetchSMHIFeed|false|If information from smhi.se should be fetched|
 |SMHI.se|smhiFeedInterestingAreas|[]|A list if areas to show messages regarding. If empty, all areas will be shown. *(case-insensitive)*|
 |SMHI.se|smhiPreferredLocale|"sv"|Preferred locale for localized SMHI content. The formatter will try this locale first, then fall back to English (en) and finally to a default value ("").|
 
@@ -43,6 +44,7 @@ Here is an example for an entry in the modules array in your `config.js`:
     config: {
         updateInterval: 30*60*1000,
         uiUpdateInterval: 10*1000,
+        fetchDemoFeed: false,
 
         showDescription: true,
         descriptionMaxLength: 400,

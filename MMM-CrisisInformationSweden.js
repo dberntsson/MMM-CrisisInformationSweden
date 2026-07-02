@@ -19,6 +19,7 @@ Module.register("MMM-CrisisInformationSweden", {
     defaults: {
         updateInterval: 30*60*1000,
         uiUpdateInterval: 10*1000,
+        fetchDemoFeed: true,
 
         showDescription: true,
         descriptionMaxLength: 400,
@@ -26,11 +27,11 @@ Module.register("MMM-CrisisInformationSweden", {
         silent: false,
         filterContent: [],
 
-        fetchKrisinformationFeed: true,
+        fetchKrisinformationFeed: false,
         krisinformationInterestingAreas: [],
         krisinformationAlwaysShowNational: true,
 
-        fetchSMHIFeed: true,
+        fetchSMHIFeed: false,
         smhiFeedInterestingAreas: [],
         smhiPreferredLocale: "sv",
     },

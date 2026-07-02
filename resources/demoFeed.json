@@ -1,0 +1,68 @@
+[
+    {
+	"published": -10,
+	"updated": -9,
+	"warningLevel": "Meddelande",
+	"warningStartTime": -8,
+	"warningStopTime": -7,
+	"title": "Ett meddelande som har passerat och kommer filtreras bort",
+	"description": "Det hände något som inte längre är relevant. Denna incident har passerat och kommer filtreras bort.",
+	"origin": "demo",
+	"affectedArea": "Hela Sverige",
+	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
+  },
+  {
+	"published": -240,
+	"updated": -216,
+	"warningLevel": "Meddelande",
+	"warningStartTime": -192,
+	"warningStopTime": 48,
+	"title": "Ett meddelande som pågår just nu",
+	"description": "En pågående incident som man vet när den startar och slutar.",
+	"origin": "demo",
+	"affectedArea": "Hela Sverige",
+	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
+  },
+  {
+	"published": -48,
+	"warningLevel": "Gul",
+	"warningStartTime": 48,
+	"warningStopTime": 240,
+	"title": "Ett meddelande som är publicerat men inte startat än",
+	"description": "En incident som inte har startat än, men man vet när den startar och slutar.",
+	"origin": "demo",
+	"affectedArea": "Hela Sverige",
+	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
+  },
+  {
+	"published": -24,
+	"warningLevel": "Röd",
+	"warningStartTime": 24,
+	"title": "Ett meddelande som är publicerat men inte startat än",
+	"description": "En incident som inte har startat än, men man vet när den startar, men inte slutar.",
+	"origin": "demo",
+	"affectedArea": "Hela Sverige",
+	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
+  },
+  {
+	"published": -1,
+	"warningStartTime": 2,
+	"warningStopTime": 4,
+	"title": "Ett meddelande som är publicerat men inte startat än",
+	"description": "En kort incident som inte har startat än, men man vet när och hur länge den varar.",
+	"origin": "demo",
+	"affectedArea": "Hela Sverige",
+	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
+  },
+  {
+	"published": -2,
+	"warningLevel": "Orange",
+	"warningStartTime": -1,
+	"warningStopTime": 1,
+	"title": "Ett meddelande som pågår just nu",
+	"description": "En kort pågående incident som snart slutar. Detta är också ett väldigt långt meddelande som är tänkt att testas för att se hur det hanteras.",
+	"origin": "demo",
+	"affectedArea": "Hela Sverige",
+	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
+  }
+]
