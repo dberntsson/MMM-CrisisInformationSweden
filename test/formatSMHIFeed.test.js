@@ -1,5 +1,6 @@
 const assert = require("assert");
 const { formatSMHIFeed, filterSMHIFeed, isWarningRelevant } = require("../lib/smhiFeedUtils");
+const { getIncidentPeriodString } = require("../lib/feedFormattingUtils");
 const moment = require("moment");
 
 class FormatSMHIFeedTest {
@@ -22,6 +23,7 @@ class FormatSMHIFeedTest {
         this.testSingleWarningArea();
         this.testMultipleWarnings();
         this.testSMHIFeedContentFilterNoMatch();
+        this.testSharedIncidentPeriodFormatterMatchesFeedOutput();
         console.log("All formatSMHIFeed tests passed.");
     }
 
@@ -50,8 +52,11 @@ class FormatSMHIFeedTest {
                 updatedTime: undefined,
                 origin: "SMHI",
                 warningLevel: "Meddelande",
-                startTime: "2026-04-21T09:02:43.328Z",
-                stopTime: undefined,
+                warningRelevantStartTime: "2026-06-02T13:47:43.956Z",
+                warningRelevantStopTime: undefined,
+                incidentStartTime: "2026-04-21T09:02:43.328Z",
+                incidentStopTime: undefined,
+                incidentPeriodString: getIncidentPeriodString("2026-04-21T09:02:43.328Z", undefined),
                 incidentTitle: "Låga grundvattennivåer. Låga flöden i Rönne å och i Kävlingeån.",
                 incidentDescription: expectedIncidentDescription,
                 affectedArea: ["Skåne län"],
@@ -172,6 +177,33 @@ class FormatSMHIFeedTest {
         assert.strictEqual(isWarningRelevant(formattedItem), false, "SMHI relevance helper should exclude a warning that has not been published yet");
     }
 
+    static testSMHIFeedGeneratesIncidentPeriodStringRelativeToNow() {
+        const payload = [
+            {
+                warningAreas: [
+                    {
+                        published: `${moment().subtract(1, "hours")}`,
+                        warningLevel: { sv: "Gul" },
+                        approximateStart: `${moment().add(2, "hours")}`,
+                        approximateEnd: `${moment().add(5, "hours")}`,
+                        descriptions: [
+                            { title: { code: "INCIDENT" }, text: { sv: "Future incident" } },
+                            { title: { code: "HAPPENS" }, text: { sv: "Starts soon" } },
+                            { title: { code: "WHERE" }, text: { sv: "Skåne" } },
+                        ],
+                        affectedAreas: ["Skåne"],
+                    },
+                ],
+            },
+        ];
+
+        const [formattedItem] = formatSMHIFeed(payload);
+        const expectedStart = `${moment(formattedItem.incidentStartTime).format("YYYY-MM-DD HH:mm")}`;
+        const expectedStop = `${moment(formattedItem.incidentStopTime).format("YYYY-MM-DD HH:mm")}`;
+
+        assert.strictEqual(formattedItem.incidentPeriodString, `${expectedStart} -- ${expectedStop}`, "incidentPeriodString should reflect the incident start and stop times");
+    }
+
     static testCountPreservesItemCount() {
         const payload = require("./fixtures/smhiLiveResponse.json");
 
@@ -209,8 +241,11 @@ class FormatSMHIFeedTest {
                 updatedTime: undefined,
                 origin: "SMHI",
                 warningLevel: "Gul",
-                startTime: "2026-06-27T08:00:00.000Z",
-                stopTime: "2026-06-29T08:00:00.000Z",
+                warningRelevantStartTime: "2021-09-20T09:08:40.862Z",
+                warningRelevantStopTime: "2026-06-29T08:00:00.000Z",
+                incidentStartTime: "2026-06-27T08:00:00.000Z",
+                incidentStopTime: "2026-06-29T08:00:00.000Z",
+                incidentPeriodString: getIncidentPeriodString("2026-06-27T08:00:00.000Z", "2026-06-29T08:00:00.000Z"),
                 incidentTitle: 'TESTMEDDELANDE Under torsdagen väntas tilltagande västlig vind med byvindar upp till stormstyrka som bland annat medför risk för nedfallna träd, begränsad framkomlighet i trafiken och risk för flygande föremål. Vinden avtar västerifrån under kvällen.',
                 incidentDescription: truncateText(getDescriptionText(payload[0].warningAreas[0])),
                 affectedArea: ["Västra Götalands län"],
@@ -221,8 +256,11 @@ class FormatSMHIFeedTest {
                 updatedTime: undefined,
                 origin: "SMHI",
                 warningLevel: "Gul",
-                startTime: "2026-06-27T08:00:00.000Z",
-                stopTime: "2026-06-30T08:00:00.000Z",
+                warningRelevantStartTime: "2021-09-20T09:10:16.237Z",
+                warningRelevantStopTime: "2026-06-30T08:00:00.000Z",
+                incidentStartTime: "2026-06-27T08:00:00.000Z",
+                incidentStopTime: "2026-06-30T08:00:00.000Z",
+                incidentPeriodString: getIncidentPeriodString("2026-06-27T08:00:00.000Z", "2026-06-30T08:00:00.000Z"),
                 incidentTitle: "TESTMEDDELANDE Från torsdag förmiddag till torsdag eftermiddag sydväst ca 15 m/s.",
                 incidentDescription: truncateText(getDescriptionText(payload[1].warningAreas[0])),
                 affectedArea: ["Kattegatt"],
@@ -363,8 +401,11 @@ class FormatSMHIFeedTest {
                 updatedTime: undefined,
                 origin: "SMHI",
                 warningLevel: "Gul",
-                startTime: "2026-06-29T00:00:00Z",
-                stopTime: "2026-06-30T00:00:00Z",
+                warningRelevantStartTime: "2026-06-28T10:00:00Z",
+                warningRelevantStopTime: "2026-06-30T00:00:00Z",
+                incidentStartTime: "2026-06-29T00:00:00Z",
+                incidentStopTime: "2026-06-30T00:00:00Z",
+                incidentPeriodString: getIncidentPeriodString("2026-06-29T00:00:00Z", "2026-06-30T00:00:00Z"),
                 incidentTitle: "Storm",
                 incidentDescription: "Blåser kraftigt",
                 affectedArea: ["Gotland"],
@@ -414,8 +455,11 @@ class FormatSMHIFeedTest {
                 updatedTime: undefined,
                 origin: "SMHI",
                 warningLevel: "Orange",
-                startTime: "2026-06-28T12:00:00Z",
-                stopTime: "2026-06-28T18:00:00Z",
+                warningRelevantStartTime: "2026-06-28T11:00:00Z",
+                warningRelevantStopTime: "2026-06-28T18:00:00Z",
+                incidentStartTime: "2026-06-28T12:00:00Z",
+                incidentStopTime: "2026-06-28T18:00:00Z",
+                incidentPeriodString: getIncidentPeriodString("2026-06-28T12:00:00Z", "2026-06-28T18:00:00Z"),
                 incidentTitle: "Översvämning",
                 incidentDescription: "Vattennivån stiger",
                 affectedArea: ["Västra Götaland"],
@@ -426,8 +470,11 @@ class FormatSMHIFeedTest {
                 updatedTime: undefined,
                 origin: "SMHI",
                 warningLevel: "Röd",
-                startTime: "2026-06-28T13:00:00Z",
-                stopTime: "2026-06-28T16:00:00Z",
+                warningRelevantStartTime: "2026-06-28T12:30:00Z",
+                warningRelevantStopTime: "2026-06-28T16:00:00Z",
+                incidentStartTime: "2026-06-28T13:00:00Z",
+                incidentStopTime: "2026-06-28T16:00:00Z",
+                incidentPeriodString: getIncidentPeriodString("2026-06-28T13:00:00Z", "2026-06-28T16:00:00Z"),
                 incidentTitle: "Halka",
                 incidentDescription: "Blir mycket halt",
                 affectedArea: ["Dalarna"],
@@ -491,6 +538,33 @@ class FormatSMHIFeedTest {
         const actualFeed = filterSMHIFeed(formatted, config);
 
         assert.strictEqual(actualFeed.length, 1, "Content filter should include warnings when filter text doesn't match");
+    }
+
+    static testSharedIncidentPeriodFormatterMatchesFeedOutput() {
+        const startTime = "2026-07-02T09:00:00.000Z";
+        const stopTime = "2026-07-02T12:00:00.000Z";
+
+        const actual = getIncidentPeriodString(startTime, stopTime);
+        const formattedItem = formatSMHIFeed([
+            {
+                warningAreas: [
+                    {
+                        published: startTime,
+                        warningLevel: { sv: "Gul" },
+                        approximateStart: startTime,
+                        approximateEnd: stopTime,
+                        descriptions: [
+                            { title: { code: "INCIDENT" }, text: { sv: "Shared formatter" } },
+                            { title: { code: "HAPPENS" }, text: { sv: "Shared formatter" } },
+                            { title: { code: "WHERE" }, text: { sv: "Stockholm" } },
+                        ],
+                        affectedAreas: ["Stockholm"],
+                    },
+                ],
+            },
+        ])[0];
+
+        assert.strictEqual(actual, formattedItem.incidentPeriodString, "The shared formatter should produce the same output as the feed formatter");
     }
 
     static testSMHIFeedContentFilterMultiple() {

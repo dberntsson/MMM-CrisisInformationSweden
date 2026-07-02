@@ -88,11 +88,9 @@ Module.register("MMM-CrisisInformationSweden", {
             tdiv.style.width = "100%";
 
             var tdiv_lspan = document.createElement("span");
-            tdiv_lspan.innerHTML = `${moment(msg.publishTime).fromNow()} ${
-                msg.updatedTime !== undefined && msg.updatedTime != null && msg.updatedTime > msg.publishTime
-                    ? " <i>(uppdaterad)</i>"
-                    : ""
-            }`;
+            tdiv_lspan.innerHTML = `${msg.updatedTime !== undefined && msg.updatedTime != null && msg.updatedTime > msg.publishTime
+                    ? `Uppdaterad ${moment(msg.updatedTime).fromNow()}`
+                    : `Publiserad ${moment(msg.publishTime).fromNow()}`}`;
             tdiv_lspan.className = "align-left";
             tdiv_lspan.style.flex = "1";
             tdiv_lspan.style.minWidth = "0";
@@ -123,15 +121,18 @@ Module.register("MMM-CrisisInformationSweden", {
             mdiv_tspan.style.display = "block";
             mdiv.appendChild(mdiv_tspan);
 
+            const mdiv_bspan = document.createElement("span");
+            if (msg.incidentPeriodString !== undefined && msg.incidentPeriodString != null && msg.incidentPeriodString != "") {
+                mdiv_bspan.innerHTML = msg.incidentPeriodString + "<br>";
+            }
             if (this.config.showDescription && 
                     msg.incidentDescription !== undefined && msg.incidentDescription != null && msg.incidentDescription != "") {
-                const mdiv_bspan = document.createElement("span");
-                mdiv_bspan.innerHTML = msg.incidentDescription;
-                mdiv_bspan.className = "dimmed xsmall align-left";
-                mdiv_bspan.style.display = "block";
-                mdiv_bspan.style.marginTop = "2px";
-                mdiv.appendChild(mdiv_bspan);
+                mdiv_bspan.innerHTML = mdiv_bspan.innerHTML + msg.incidentDescription;
             }
+            mdiv_bspan.className = "dimmed xsmall align-left";
+            mdiv_bspan.style.display = "block";
+            mdiv_bspan.style.marginTop = "2px";
+            mdiv.appendChild(mdiv_bspan);
             wrapper.appendChild(mdiv);
 
 
