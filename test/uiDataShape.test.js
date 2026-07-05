@@ -18,7 +18,7 @@ class UiDataShapeTest {
             origin: entry.origin,
             publishTime: entry.publishTime,
             updatedTime: entry.updatedTime,
-            warningLevel: entry.warningLevel?.sv || entry.warningLevel,
+            warningLevelText: entry.warningLevelText?.sv || entry.warningLevelText,
         };
     }
 
@@ -31,7 +31,7 @@ class UiDataShapeTest {
         assert.strictEqual(viewModel.description, formattedEntry.incidentDescription);
         assert.strictEqual(viewModel.area, formattedEntry.affectedAreaDetails);
         assert.strictEqual(viewModel.origin, "SMHI");
-        assert.strictEqual(viewModel.warningLevel, formattedEntry.warningLevel);
+        assert.strictEqual(viewModel.warningLevelText, formattedEntry.warningLevelText);
         assert.strictEqual(viewModel.publishTime, formattedEntry.publishTime);
     }
 
@@ -44,6 +44,7 @@ class UiDataShapeTest {
         assert.strictEqual(viewModel.description, formattedEntry.incidentDescription);
         assert.strictEqual(viewModel.area, formattedEntry.affectedAreaDetails);
         assert.strictEqual(viewModel.origin, formattedEntry.origin);
+        assert.strictEqual(viewModel.warningLevelText, formattedEntry.warningLevelText);   
         assert.strictEqual(viewModel.publishTime, formattedEntry.publishTime);
     }
 }

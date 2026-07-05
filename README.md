@@ -32,6 +32,7 @@ Run `git pull` inside `../modules/MMM-CrisisInformationSweden/` directory.
 |SMHI.se|fetchSMHIFeed|false|If information from smhi.se should be fetched|
 |SMHI.se|smhiFeedInterestingAreas|[]|A list if areas to show messages regarding. If empty, all areas will be shown. *(case-insensitive)*|
 |SMHI.se|smhiPreferredLocale|"sv"|Preferred locale for localized SMHI content. The formatter will try this locale first, then fall back to English (en) and finally to a default value ("").|
+|SMHI.se|smhiShowWarningLevels|["YELLOW", "ORANGE", "RED"]|A list of warning levels you are interested in. Defined and available levels: `MESSAGE`, `YELLOW`, `ORANGE`, `RED`|
 
 ### Examples
 Here is an example for an entry in the modules array in your `config.js`:
@@ -59,6 +60,7 @@ Here is an example for an entry in the modules array in your `config.js`:
         fetchSMHIFeed: true,
         smhiFeedInterestingAreas: [],
         preferredLocale: "sv",
+        smhiShowWarningLevels: ["MESSAGE", "YELLOW", ORANGE", "RED"],
 }
 },
 ```

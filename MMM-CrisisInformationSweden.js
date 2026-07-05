@@ -34,6 +34,7 @@ Module.register("MMM-CrisisInformationSweden", {
         fetchSMHIFeed: false,
         smhiFeedInterestingAreas: [],
         smhiPreferredLocale: "sv",
+        smhiShowWarningLevels: ["YELLOW", "ORANGE", "RED"],
     },
 
     // --------------------------------------- Define required scripts
@@ -114,8 +115,9 @@ Module.register("MMM-CrisisInformationSweden", {
             mdiv.style.alignItems = "flex-start";
             mdiv.style.textAlign = "left";
             var mdiv_tspan = document.createElement("span");
-            if (msg.warningLevel !== undefined && msg.warningLevel != null) {
-                mdiv_tspan.innerHTML = "<b>[" + msg.warningLevel + "]</b> ";
+            const warningLevelLabel = msg.warningLevelText || msg.warningLevelCode;
+            if (warningLevelLabel !== undefined && warningLevelLabel != null) {
+                mdiv_tspan.innerHTML = "<b>[" + warningLevelLabel + "]</b> ";
             }
             mdiv_tspan.innerHTML = mdiv_tspan.innerHTML + msg.incidentTitle;
             mdiv_tspan.className = "small align-left";

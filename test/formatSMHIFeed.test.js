@@ -23,6 +23,11 @@ class FormatSMHIFeedTest {
         this.testSingleWarningArea();
         this.testMultipleWarnings();
         this.testSMHIFeedContentFilterNoMatch();
+        this.testSMHIWarningLevelFilterIncludesConfiguredLevels();
+        this.testSMHIWarningLevelFilterExcludesNonConfiguredLevels();
+        this.testSMHIWarningLevelFilterIgnoresEmptyConfig();
+        this.testSMHIWarningLevelMessageUsesLocalizedText();
+        this.testSMHIWarningLevelCodeAndTextMappedFromSeparateFields();
         this.testSharedIncidentPeriodFormatterMatchesFeedOutput();
         console.log("All formatSMHIFeed tests passed.");
     }
@@ -51,7 +56,8 @@ class FormatSMHIFeedTest {
                 publishTime: "2026-06-02T13:47:43.956Z",
                 updatedTime: undefined,
                 origin: "SMHI",
-                warningLevel: "Meddelande",
+                warningLevelCode: "MESSAGE",
+                warningLevelText: "Meddelande",
                 warningRelevantStartTime: "2026-06-02T13:47:43.956Z",
                 warningRelevantStopTime: undefined,
                 incidentStartTime: "2026-04-21T09:02:43.328Z",
@@ -111,7 +117,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: `${moment().subtract(1, "days")}`,
-                        warningLevel: { sv: "Gul" },
+                        warningLevel: { sv: "Gul", code: "YELLOW" },
                         approximateStart: `${moment().subtract(2, "days")}`,
                         approximateEnd: `${moment().add(1, "days")}`,
                         descriptions: [
@@ -135,7 +141,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: `${moment().subtract(10, "days")}`,
-                        warningLevel: { sv: "Orange" },
+                        warningLevel: { sv: "Orange", code: "ORANGE" },
                         approximateStart: `${moment().subtract(12, "days")}`,
                         approximateEnd: `${moment().subtract(1, "days")}`,
                         descriptions: [
@@ -159,7 +165,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: `${moment().add(1, "days")}`,
-                        warningLevel: { sv: "Röd" },
+                        warningLevel: { sv: "Röd", code: "RED" },
                         approximateStart: `${moment().add(1, "days")}`,
                         approximateEnd: `${moment().add(2, "days")}`,
                         descriptions: [
@@ -183,7 +189,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: `${moment().subtract(1, "hours")}`,
-                        warningLevel: { sv: "Gul" },
+                        warningLevel: { sv: "Gul", code: "YELLOW" },
                         approximateStart: `${moment().add(2, "hours")}`,
                         approximateEnd: `${moment().add(5, "hours")}`,
                         descriptions: [
@@ -240,7 +246,8 @@ class FormatSMHIFeedTest {
                 publishTime: "2021-09-20T09:08:40.862Z",
                 updatedTime: undefined,
                 origin: "SMHI",
-                warningLevel: "Gul",
+                warningLevelCode: "YELLOW",
+                warningLevelText: "Gul",
                 warningRelevantStartTime: "2021-09-20T09:08:40.862Z",
                 warningRelevantStopTime: "2026-06-29T08:00:00.000Z",
                 incidentStartTime: "2026-06-27T08:00:00.000Z",
@@ -255,7 +262,8 @@ class FormatSMHIFeedTest {
                 publishTime: "2021-09-20T09:10:16.237Z",
                 updatedTime: undefined,
                 origin: "SMHI",
-                warningLevel: "Gul",
+                warningLevelCode: "YELLOW",
+                warningLevelText: "Gul",
                 warningRelevantStartTime: "2021-09-20T09:10:16.237Z",
                 warningRelevantStopTime: "2026-06-30T08:00:00.000Z",
                 incidentStartTime: "2026-06-27T08:00:00.000Z",
@@ -328,7 +336,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: "2026-06-28T10:00:00Z",
-                        warningLevel: { sv: "Gul", en: "Yellow" },
+                        warningLevel: { sv: "Gul", en: "Yellow", code: "YELLOW" },
                         approximateStart: "2026-06-29T00:00:00Z",
                         approximateEnd: "2026-06-30T00:00:00Z",
                         descriptions: [
@@ -344,7 +352,8 @@ class FormatSMHIFeedTest {
 
         const [formattedItem] = formatSMHIFeed(payload, { preferredLocale: "en" });
 
-        assert.strictEqual(formattedItem.warningLevel, "Yellow", "warningLevel should resolve to the configured locale");
+        assert.strictEqual(formattedItem.warningLevelCode, "YELLOW", "warningLevelCode should resolve to canonical warning level");
+        assert.strictEqual(formattedItem.warningLevelText, "Yellow", "warningLevelText should resolve to the configured locale");
         assert.strictEqual(formattedItem.incidentTitle, "Incident description", "incidentTitle should resolve to the configured locale");
         assert.strictEqual(formattedItem.incidentDescription, "It happens", "incidentDescription should resolve to the configured locale");
         assert.deepStrictEqual(formattedItem.affectedArea, ["Kalmar County"], "affectedArea should resolve to localized area names");
@@ -357,7 +366,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: "2026-06-28T10:00:00Z",
-                        warningLevel: { sv: "Gul", en: "Yellow" },
+                        warningLevel: { sv: "Gul", en: "Yellow", code: "YELLOW" },
                         approximateStart: "2026-06-29T00:00:00Z",
                         approximateEnd: "2026-06-30T00:00:00Z",
                         descriptions: [
@@ -381,7 +390,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: "2026-06-28T10:00:00Z",
-                        warningLevel: { sv: "Gul" },
+                        warningLevel: { sv: "Gul", code: "YELLOW" },
                         approximateStart: "2026-06-29T00:00:00Z",
                         approximateEnd: "2026-06-30T00:00:00Z",
                         descriptions: [
@@ -400,7 +409,8 @@ class FormatSMHIFeedTest {
                 publishTime: "2026-06-28T10:00:00Z",
                 updatedTime: undefined,
                 origin: "SMHI",
-                warningLevel: "Gul",
+                warningLevelCode: "YELLOW",
+                warningLevelText: "Gul",
                 warningRelevantStartTime: "2026-06-28T10:00:00Z",
                 warningRelevantStopTime: "2026-06-30T00:00:00Z",
                 incidentStartTime: "2026-06-29T00:00:00Z",
@@ -423,7 +433,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: "2026-06-28T11:00:00Z",
-                        warningLevel: { sv: "Orange" },
+                        warningLevel: { sv: "Orange", code: "ORANGE" },
                         approximateStart: "2026-06-28T12:00:00Z",
                         approximateEnd: "2026-06-28T18:00:00Z",
                         descriptions: [
@@ -435,7 +445,7 @@ class FormatSMHIFeedTest {
                     },
                     {
                         published: "2026-06-28T12:30:00Z",
-                        warningLevel: { sv: "Röd" },
+                        warningLevel: { sv: "Röd", code: "RED" },
                         approximateStart: "2026-06-28T13:00:00Z",
                         approximateEnd: "2026-06-28T16:00:00Z",
                         descriptions: [
@@ -454,7 +464,8 @@ class FormatSMHIFeedTest {
                 publishTime: "2026-06-28T11:00:00Z",
                 updatedTime: undefined,
                 origin: "SMHI",
-                warningLevel: "Orange",
+                warningLevelCode: "ORANGE",
+                warningLevelText: "Orange",
                 warningRelevantStartTime: "2026-06-28T11:00:00Z",
                 warningRelevantStopTime: "2026-06-28T18:00:00Z",
                 incidentStartTime: "2026-06-28T12:00:00Z",
@@ -469,7 +480,8 @@ class FormatSMHIFeedTest {
                 publishTime: "2026-06-28T12:30:00Z",
                 updatedTime: undefined,
                 origin: "SMHI",
-                warningLevel: "Röd",
+                warningLevelCode: "RED",
+                warningLevelText: "Röd",
                 warningRelevantStartTime: "2026-06-28T12:30:00Z",
                 warningRelevantStopTime: "2026-06-28T16:00:00Z",
                 incidentStartTime: "2026-06-28T13:00:00Z",
@@ -519,7 +531,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: `${moment().subtract(1, "days")}`,
-                        warningLevel: { sv: "Gul" },
+                        warningLevel: { sv: "Gul", code: "YELLOW" },
                         approximateStart: `${moment().subtract(1, "days")}`,
                         approximateEnd: `${moment().add(1, "days")}`,
                         descriptions: [
@@ -550,7 +562,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: startTime,
-                        warningLevel: { sv: "Gul" },
+                        warningLevel: { sv: "Gul", code: "YELLOW" },
                         approximateStart: startTime,
                         approximateEnd: stopTime,
                         descriptions: [
@@ -573,7 +585,7 @@ class FormatSMHIFeedTest {
                 warningAreas: [
                     {
                         published: `${moment().subtract(1, "days")}`,
-                        warningLevel: { sv: "Orange" },
+                        warningLevel: { sv: "Orange", code: "ORANGE" },
                         approximateStart: `${moment().subtract(1, "days")}`,
                         approximateEnd: `${moment().add(1, "days")}`,
                         descriptions: [
@@ -592,6 +604,152 @@ class FormatSMHIFeedTest {
         const actualFeed = filterSMHIFeed(formatted, config);
 
         assert.strictEqual(actualFeed.length, 0, "Content filter should exclude when any filter text matches");
+    }
+
+    static testSMHIWarningLevelFilterIncludesConfiguredLevels() {
+        const formattedFeed = [
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "YELLOW",
+                warningLevelText: "Gul",
+                incidentTitle: "Yellow warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "ORANGE",
+                warningLevelText: "Orange",
+                incidentTitle: "Orange warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "RED",
+                warningLevelText: "Röd",
+                incidentTitle: "Red warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+        ];
+
+        const actualFeed = filterSMHIFeed(formattedFeed, true, { smhiShowWarningLevels: ["YELLOW", "RED"] });
+
+        assert.strictEqual(actualFeed.length, 2, "Warning-level filter should include only configured levels");
+        assert.deepStrictEqual(actualFeed.map((item) => item.warningLevelText), ["Gul", "Röd"], "Warning-level filter should preserve included yellow and red warnings");
+    }
+
+    static testSMHIWarningLevelFilterExcludesNonConfiguredLevels() {
+        const formattedFeed = [
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "MESSAGE",
+                warningLevelText: "Meddelande",
+                incidentTitle: "Message warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "ORANGE",
+                warningLevelText: "Orange",
+                incidentTitle: "Orange warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+        ];
+
+        const actualFeed = filterSMHIFeed(formattedFeed, true, { smhiShowWarningLevels: ["MESSAGE"] });
+
+        assert.strictEqual(actualFeed.length, 1, "Warning-level filter should exclude levels not listed in config");
+        assert.strictEqual(actualFeed[0].warningLevelText, "Meddelande", "Only message-level warnings should remain");
+    }
+
+    static testSMHIWarningLevelFilterIgnoresEmptyConfig() {
+        const formattedFeed = [
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "YELLOW",
+                warningLevelText: "Gul",
+                incidentTitle: "Yellow warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+            {
+                publishTime: "2026-07-02T09:00:00.000Z",
+                warningRelevantStopTime: "2026-07-02T12:00:00.000Z",
+                warningLevelCode: "RED",
+                warningLevelText: "Röd",
+                incidentTitle: "Red warning",
+                incidentDescription: "Sample",
+                affectedArea: ["Stockholm"],
+            },
+        ];
+
+        const actualFeed = filterSMHIFeed(formattedFeed, true, { smhiShowWarningLevels: [] });
+
+        assert.strictEqual(actualFeed.length, 2, "Empty warning-level config should not filter out any warnings");
+    }
+
+    static testSMHIWarningLevelMessageUsesLocalizedText() {
+        const payload = [
+            {
+                warningAreas: [
+                    {
+                        published: "2026-06-02T13:47:43.956Z",
+                        warningLevel: {
+                            sv: "Meddelande",
+                            en: "Message",
+                            code: "MESSAGE",
+                        },
+                        approximateStart: "2026-04-21T09:02:43.328Z",
+                        approximateEnd: undefined,
+                        descriptions: [
+                            { title: { code: "INCIDENT" }, text: { sv: "Testincident" } },
+                            { title: { code: "AFFECT" }, text: { sv: "Testbeskrivning" } },
+                        ],
+                        affectedAreas: [{ sv: "Skåne län", en: "Skåne County" }],
+                    },
+                ],
+            },
+        ];
+
+        const [formattedItem] = formatSMHIFeed(payload, { preferredLocale: "sv" });
+
+        assert.strictEqual(formattedItem.warningLevelCode, "MESSAGE", "warningLevelCode should keep canonical MESSAGE level");
+        assert.strictEqual(formattedItem.warningLevelText, "Meddelande", "warningLevelText should use the localized Swedish label instead of raw code");
+    }
+
+    static testSMHIWarningLevelCodeAndTextMappedFromSeparateFields() {
+        const payload = [
+            {
+                warningAreas: [
+                    {
+                        published: "2026-06-28T10:00:00Z",
+                        warningLevel: { sv: "Gul", en: "Yellow", code: "YELLOW" },
+                        approximateStart: "2026-06-29T00:00:00Z",
+                        approximateEnd: "2026-06-30T00:00:00Z",
+                        descriptions: [
+                            { title: { code: "INCIDENT" }, text: { sv: "Testtitel" } },
+                            { title: { code: "HAPPENS" }, text: { sv: "Testtext" } },
+                        ],
+                        affectedAreas: [{ sv: "Skåne län", en: "Skåne County" }],
+                    },
+                ],
+            },
+        ];
+
+        const [formattedItem] = formatSMHIFeed(payload, { preferredLocale: "sv" });
+
+        assert.strictEqual(formattedItem.warningLevelCode, "YELLOW", "warningLevelCode should come from warningLevel.code");
+        assert.strictEqual(formattedItem.warningLevelText, "Gul", "warningLevelText should come from localized warningLevel text");
     }
 }
 
