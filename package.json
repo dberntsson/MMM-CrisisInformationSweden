@@ -1,6 +1,6 @@
 {
   "name": "mmm-crisisinformationsweden",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "MagicMirror² module for official Swedish crisis news, weather warnings, and public safety information.",
   "main": "index.js",
   "scripts": {

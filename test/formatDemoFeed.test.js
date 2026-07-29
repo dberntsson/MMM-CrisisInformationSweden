@@ -20,11 +20,11 @@ class FormatDemoFeedTest {
     static testFormatDemoFeedMapsFieldsAndBuildsIncidentPeriodString() {
         const payload = [
             {
-                published: -10,
-                updated: -5,
+                published: -600,
+                updated: -300,
                 warningLevelText: "Gul",
-                warningStartTime: 15,
-                warningStopTime: 75,
+                warningStartTime: 900,
+                warningStopTime: 4500,
                 title: "Demo warning title",
                 description: "a".repeat(200),
                 affectedArea: "Skane",
@@ -36,10 +36,10 @@ class FormatDemoFeedTest {
         const [formatted] = formatDemoFeed(payload, { descriptionMaxLength: 20 });
         assert.ok(formatted, "Formatter should return one item for one-item input");
 
-        this.assertDateNearOffset(formatted.publishTime, -10);
-        this.assertDateNearOffset(formatted.updatedTime, -5);
-        this.assertDateNearOffset(formatted.incidentStartTime, 15);
-        this.assertDateNearOffset(formatted.incidentStopTime, 75);
+        this.assertDateNearOffset(formatted.publishTime, -600);
+        this.assertDateNearOffset(formatted.updatedTime, -300);
+        this.assertDateNearOffset(formatted.incidentStartTime, 900);
+        this.assertDateNearOffset(formatted.incidentStopTime, 4500);
 
         assert.strictEqual(formatted.warningLevelText, "Gul", "warningLevelText should be mapped");
         assert.strictEqual(formatted.incidentTitle, "Demo warning title", "incidentTitle should be mapped");
@@ -101,16 +101,16 @@ class FormatDemoFeedTest {
         );
     }
 
-    static assertDateNearOffset(value, offsetHours) {
+    static assertDateNearOffset(value, offsetMinutes) {
         assert.ok(value instanceof Date, "Formatted timestamp should be a Date");
 
-        const expected = Date.now() + offsetHours * 60 * 60 * 1000;
+        const expected = Date.now() + offsetMinutes * 60 * 1000;
         const actual = value.getTime();
         const toleranceMs = 4000;
 
         assert.ok(
             Math.abs(actual - expected) <= toleranceMs,
-            `Expected time to be within ${toleranceMs}ms of offset ${offsetHours} hours`
+            `Expected time to be within ${toleranceMs}ms of offset ${offsetMinutes} minutes`
         );
     }
 }
