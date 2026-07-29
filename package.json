@@ -4,7 +4,7 @@
   "description": "News feed from the Swedish Government Crisis Information.",
   "main": "index.js",
   "scripts": {
-    "test": "node test/formatSMHIFeed.test.js && node test/formatKrisinformationFeed.test.js && node test/feedFormattingUtils.test.js && node test/formatDemoFeed.test.js && node test/uiDataShape.test.js"
+    "test": "node test/formatSMHIFeed.test.js && node test/formatKrisinformationFeed.test.js && node test/feedFormattingUtils.test.js && node test/formatDemoFeed.test.js && node test/formatTrafikverketFeed.test.js && node test/uiDataShape.test.js"
   },
   "repository": {
     "type": "git",

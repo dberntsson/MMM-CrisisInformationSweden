@@ -3,6 +3,7 @@
 **MMM-CrisisInformationSweden** is a module for [MagicMirror²](https://magicmirror.builders/) to display important news and warnings from
 * Swedish Government Crisis Information [Krisinformation.se](https://www.krisinformation.se) (feed: [here](https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True))
 * Swedish Meteorological and Hydrological Institute [SMHI.se](https://www.smhi.se/) (feed: [here](https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json))
+* Swedish Transport Administration [Trafikverket.se](https://www.trafikverket.se/) (request file: [resources/trafikverket-situation.http](resources/trafikverket-situation.http))
 
 
 ## Install
@@ -33,6 +34,9 @@ Run `git pull` inside `../modules/MMM-CrisisInformationSweden/` directory.
 |SMHI.se|smhiFeedInterestingAreas|[]|A list if areas to show messages regarding. If empty, all areas will be shown. *(case-insensitive)*|
 |SMHI.se|smhiPreferredLocale|"sv"|Preferred locale for localized SMHI content. The formatter will try this locale first, then fall back to English (en) and finally to a default value ("").|
 |SMHI.se|smhiShowWarningLevels|["YELLOW", "ORANGE", "RED"]|A list of warning levels you are interested in. Defined and available levels: `MESSAGE`, `YELLOW`, `ORANGE`, `RED`|
+|Trafikverket.se|trafikverketCountyNos|"12"|Comma-separated county numbers to include in the Trafikverket request, for example "12,13,14"|
+|Trafikverket.se|fetchTrafikverketFeed|false|If traffic situations from Trafikverket should be fetched|
+|Trafikverket.se|trafikverketSituationResourcePath|"resources/trafikverket-situation.http"|Path to the HTTP request file used for the Trafikverket call|
 
 ### Examples
 Here is an example for an entry in the modules array in your `config.js`:
