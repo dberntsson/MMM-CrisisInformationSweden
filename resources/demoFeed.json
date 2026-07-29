@@ -1,68 +1,74 @@
 [
-    {
-	"published": -10,
-	"updated": -9,
-	"warningLevel": "Meddelande",
-	"warningStartTime": -8,
-	"warningStopTime": -7,
-	"title": "Ett meddelande som har passerat och kommer filtreras bort",
-	"description": "Det hände något som inte längre är relevant. Denna incident har passerat och kommer filtreras bort.",
-	"origin": "demo",
-	"affectedArea": "Hela Sverige",
-	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
-  },
-  {
-	"published": -240,
-	"updated": -216,
-	"warningLevel": "Meddelande",
-	"warningStartTime": -192,
-	"warningStopTime": 48,
-	"title": "Ett meddelande som pågår just nu",
-	"description": "En pågående incident som man vet när den startar och slutar.",
-	"origin": "demo",
-	"affectedArea": "Hela Sverige",
-	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
-  },
-  {
-	"published": -48,
-	"warningLevel": "Gul",
-	"warningStartTime": 48,
-	"warningStopTime": 240,
-	"title": "Ett meddelande som är publicerat men inte startat än",
-	"description": "En incident som inte har startat än, men man vet när den startar och slutar.",
-	"origin": "demo",
-	"affectedArea": "Hela Sverige",
-	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
-  },
-  {
-	"published": -24,
-	"warningLevel": "Röd",
-	"warningStartTime": 24,
-	"title": "Ett meddelande som är publicerat men inte startat än",
-	"description": "En incident som inte har startat än, men man vet när den startar, men inte slutar.",
-	"origin": "demo",
-	"affectedArea": "Hela Sverige",
-	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
-  },
-  {
-	"published": -1,
-	"warningStartTime": 2,
-	"warningStopTime": 4,
-	"title": "Ett meddelande som är publicerat men inte startat än",
-	"description": "En kort incident som inte har startat än, men man vet när och hur länge den varar.",
-	"origin": "demo",
-	"affectedArea": "Hela Sverige",
-	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
-  },
-  {
-	"published": -2,
-	"warningLevel": "Orange",
-	"warningStartTime": -1,
-	"warningStopTime": 1,
-	"title": "Ett meddelande som pågår just nu",
-	"description": "En kort pågående incident som snart slutar. Detta är också ett väldigt långt meddelande som är tänkt att testas för att se hur det hanteras.",
-	"origin": "demo",
-	"affectedArea": "Hela Sverige",
-	"affectedAreaDetails": "Från norr till söder, inklusive skogar och gräsmarker."
-  }
+	{
+		"order": -1,
+		"published": -600,
+		"updated": -540,
+		"warningLevelText": "Meddelande",
+		"warningStartTime": -480,
+		"warningStopTime": -420,
+		"title": "En händelse som har passerat och kommer filtreras bort",
+		"description": "Det hände något som inte längre är relevant. Denna händelse har passerat och kommer filtreras bort.",
+		"origin": "demo",
+		"affectedArea": "Hela Sverige",
+		"affectedAreaDetails": "Från kust till kust, och en bit ut på bryggan."
+	},
+	{
+		"order": 1,
+		"published": -60,
+		"warningStartTime": 1,
+		"warningStopTime": 2,
+		"title": "En kort händelse samma dag som inte startat än",
+		"description": "Då händelsen startas och slutar samma dag, visas endast tidpunkterna.",
+		"origin": "demo",
+		"affectedArea": "Hela Sverige",
+		"affectedAreaDetails": "Hela landet, inklusive öar som kartan ibland glömmer."
+	},
+	{
+		"order": 2,
+		"published": -120,
+		"warningLevelText": "Orange",
+		"warningStartTime": -60,
+		"warningStopTime": 1,
+		"title": "En pågående händelse som strax slutar",
+		"description": "En kort händelse med ett långt meddelande... Händelsen slutar snart och markeras med 'Giltig till $tid idag'. Det väldigt långa meddelandet tar också upp mycket plats och bara en liten del av det kommer visas.",
+		"origin": "demo",
+		"affectedArea": "Hela Sverige",
+		"affectedAreaDetails": "Hela Sverige - ja, även Borås."
+	},
+	{
+		"order": 3,
+		"published": -1440,
+		"warningLevelText": "Röd",
+		"warningStartTime": 2880,
+		"title": "En tillsvidare händelse som är publicerad men har inte startat än",
+		"description": "En händelse som man vet när den startar, men inte slutar. Detta markeras med 'Giltig från $datum $tid'.",
+		"origin": "demo",
+		"affectedArea": "Hela Sverige",
+		"affectedAreaDetails": "Från första glasskiosken i söder till sista myggan i norr."
+	},
+	{
+		"order": 4,
+		"published": -2880,
+		"warningLevelText": "Gul",
+		"warningStartTime": 2880,
+		"warningStopTime": 14400,
+		"title": "En händelse som är publicerad men inte startat än",
+		"description": "En händelse som inte har startat än, men man vet när den startar och slutar. Detta markeras med 'Giltig $datum $tid -- $datum $tid'.",
+		"origin": "demo",
+		"affectedArea": "Hela Sverige",
+		"affectedAreaDetails": "Alla platser där någon just nu säger 'det var bättre väder igår'."
+	},
+	{
+		"order": 5,
+		"published": -14400,
+		"updated": -12960,
+		"warningLevelText": "Meddelande",
+		"warningStartTime": -11520,
+		"warningStopTime": 2880,
+		"title": "En uppdaterad pågående händelse som slutar om ett par dagar",
+		"description": "En uppdaterad pågående händelse visar den relativa tiden sedan händelsen uppdaterades, samt markeras med 'Giltig till $datum $tid'.",
+		"origin": "demo",
+		"affectedArea": "Hela Sverige",
+		"affectedAreaDetails": "Från västkustens salta vindar till Norrlands djupa skogar."
+	}
 ]

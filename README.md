@@ -5,6 +5,26 @@
 * Swedish Meteorological and Hydrological Institute [SMHI.se](https://www.smhi.se/) (feed: [here](https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json))
 * Swedish Transport Administration [Trafikverket.se](https://www.trafikverket.se/) (request file: [resources/trafikverket-situation.http](resources/trafikverket-situation.http))
 
+## Table of Contents
+- [MMM-CrisisInformationSweden](#mmm-crisisinformationsweden)
+    - [About this fork](#about-this-fork)
+    - [Install](#install)
+    - [Update](#update)
+    - [Configuration](#configuration)
+        - [General configuration](#general-configuration)
+        - [Feed configuration](#feed-configuration)
+            - [Demo](#demo)
+            - [Krisinformation](#krisinformation)
+            - [SMHI](#smhi)
+        - [Examples](#examples)
+    - [Screenshots](#screenshots)
+
+## About this fork
+This repository continues the development of the original [**MMM-CrisisInformationSweden**](https://github.com/Pejjo/MMM-CrisisInformationSweden) by Anders Boghammar and contributors.
+
+The goal of this fork is to evolve the module from a single-source news feed into a unified MagicMirror² module for official Swedish public information regarding crisis news, weather warnings, and public safety information.
+
+The project remains MIT licensed, and all credit goes to the original authors for creating the foundation this work builds upon.
 
 ## Install
 
@@ -49,13 +69,14 @@ Here is an example for an entry in the modules array in your `config.js`:
     config: {
         updateInterval: 30*60*1000,
         uiUpdateInterval: 10*1000,
-        fetchDemoFeed: false,
 
         showDescription: true,
         descriptionMaxLength: 400,
         oldest: 7,
         silent: false,
         filterContent: [],
+
+        fetchDemoFeed: false,
 
         fetchKrisinformationFeed: true,
         krisinformationInterestingAreas: [],
@@ -75,8 +96,12 @@ Here is an example for an entry in the modules array in your `config.js`:
     module: 'MMM-CrisisInformationSweden',
     position: 'top_right',
     config: {
+        fetchDemoFeed: false,
+
+        fetchKrisinformationFeed: true,
         krisinformationInterestingAreas: ["Skåne län"],
 
+        fetchSMHIFeed: true,
         smhiFeedInterestingAreas: ["Skåne län"],
     }
 },
@@ -91,13 +116,20 @@ Here is an example for an entry in the modules array in your `config.js`:
         descriptionMaxLength: 1024,
         filterContent: ["Denna nyhet uppdateras inte längre","Meddelandet gäller inte längre"],
 
+        fetchDemoFeed: false,
+
+        fetchKrisinformationFeed: true,
         krisinformationInterestingAreas: ["Skåne län"],
 
+        fetchSMHIFeed: true,
         smhiFeedInterestingAreas: ["Skåne län"],
     }
 },
 ```
 
-## Screenshot
-
-![Screenshot](/docs/ScreenShot2.PNG)
+## Screenshots
+![Exempelhändelse 1](/docs/event_1.png)  
+![Exempelhändelse 2](/docs/event_2.png)  
+![Exempelhändelse 3](/docs/event_3.png)  
+![Exempelhändelse 4](/docs/event_4.png)  
+![Exempelhändelse 5](/docs/event_5.png)  

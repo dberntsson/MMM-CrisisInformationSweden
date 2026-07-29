@@ -19,14 +19,14 @@ Module.register("MMM-CrisisInformationSweden", {
     defaults: {
         updateInterval: 30*60*1000,
         uiUpdateInterval: 10*1000,
-        fetchDemoFeed: true,
-        fetchTrafikverketFeed: false,
 
         showDescription: true,
         descriptionMaxLength: 400,
         oldest: 7,
         silent: false,
         filterContent: [],
+
+        fetchDemoFeed: true,
 
         fetchKrisinformationFeed: false,
         krisinformationInterestingAreas: [],
@@ -36,6 +36,7 @@ Module.register("MMM-CrisisInformationSweden", {
         smhiFeedInterestingAreas: [],
         smhiPreferredLocale: "sv",
         smhiShowWarningLevels: ["YELLOW", "ORANGE", "RED"],
+        fetchTrafikverketFeed: false,
         trafikverketCountyNos: "12",
         trafikverketSituationResourcePath: "resources/trafikverket-situation.http",
     },

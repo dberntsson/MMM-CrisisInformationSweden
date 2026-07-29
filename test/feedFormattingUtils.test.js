@@ -35,23 +35,27 @@ class FeedFormattingUtilsTest {
     }
 
     static testGetIncidentPeriodStringFormatsFutureSameDayWindow() {
-        const startTime = new Date(Date.now() + 2 * 60 * 60 * 1000);	// 2 hours in the future
-        const stopTime = new Date(Date.now() + 5 * 60 * 60 * 1000);		// 5 hours in the future
+        this.withMockedNow(new Date(2026, 6, 29, 12, 0, 0, 0), () => {
+            const startTime = new Date(2026, 6, 29, 14, 0, 0, 0);
+            const stopTime = new Date(2026, 6, 29, 17, 0, 0, 0);
 
-        const actual = getIncidentPeriodString(startTime, stopTime);
-        const expected = `${this.formatTimePart(startTime)}-${this.formatTimePart(stopTime)}`;
+            const actual = getIncidentPeriodString(startTime, stopTime);
+            const expected = `${this.formatTimePart(startTime)}-${this.formatTimePart(stopTime)}`;
 
-        assert.strictEqual(actual, expected, "A future same-day incident should render as a time range");
+            assert.strictEqual(actual, expected, "A future same-day incident should render as a time range");
+        });
     }
 
     static testGetIncidentPeriodStringFormatsActiveWindow() {
-        const startTime = new Date(Date.now() - 2 * 60 * 60 * 1000);	// 2 hours in the past
-        const stopTime = new Date(Date.now() + 2 * 60 * 60 * 1000);		// 2 hours in the future
+        this.withMockedNow(new Date(2026, 6, 29, 12, 0, 0, 0), () => {
+            const startTime = new Date(2026, 6, 29, 10, 0, 0, 0);
+            const stopTime = new Date(2026, 6, 29, 14, 0, 0, 0);
 
-        const actual = getIncidentPeriodString(startTime, stopTime);
-        const expected = `Giltlig till ${this.formatTimePart(stopTime)} idag`;
+            const actual = getIncidentPeriodString(startTime, stopTime);
+            const expected = `Giltlig till ${this.formatTimePart(stopTime)} idag`;
 
-        assert.strictEqual(actual, expected, "An active incident should render as a till-stop string");
+            assert.strictEqual(actual, expected, "An active incident should render as a till-stop string");
+        });
     }
 
     static testGetIncidentPeriodStringClarifiesDateOnlyUntilLabel() {
@@ -63,30 +67,25 @@ class FeedFormattingUtilsTest {
     }
 
     static testGetIncidentPeriodStringUsesFromLabelWhenOnlyStartTimeExists() {
-        const startTime = new Date(Date.now() + 2 * 60 * 60 * 1000);
+        this.withMockedNow(new Date(2026, 6, 29, 12, 0, 0, 0), () => {
+            const startTime = new Date(2026, 6, 29, 14, 0, 0, 0);
 
-        const actual = getIncidentPeriodString(startTime, undefined);
-        const expected = `Giltlig från ${this.formatTimePart(startTime)}`;
+            const actual = getIncidentPeriodString(startTime, undefined);
+            const expected = `Giltlig från ${this.formatTimePart(startTime)}`;
 
-        assert.strictEqual(actual, expected, "When only a start time exists for today, the label should show only time");
+            assert.strictEqual(actual, expected, "When only a start time exists for today, the label should show only time");
+        });
     }
 
     static testGetIncidentPeriodStringUsesFromLabelWithTimeWhenOnlyFutureStartTimeExists() {
-        const startTime = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
+        this.withMockedNow(new Date(2026, 6, 29, 12, 0, 0, 0), () => {
+            const startTime = new Date(2026, 6, 31, 14, 0, 0, 0);
 
-        const actual = getIncidentPeriodString(startTime, undefined);
-        const expected = `Giltlig från ${this.formatDatePart(startTime)} ${this.formatTimePart(startTime)}`;
+            const actual = getIncidentPeriodString(startTime, undefined);
+            const expected = `Giltlig från ${this.formatDatePart(startTime)} ${this.formatTimePart(startTime)}`;
 
-        assert.strictEqual(actual, expected, "When only a non-today start time exists, the label should show date and time");
-    }
-
-    static testGetIncidentPeriodStringUsesUntilLabelWhenOnlyStopTimeExists() {
-        const stopTime = new Date("2026-07-03T00:00:00.000Z");
-
-        const actual = getIncidentPeriodString(undefined, stopTime);
-        const expected = "Giltlig till 2026-07-03";
-
-        assert.strictEqual(actual, expected, "When only a stop date exists, the label should explicitly say the warning is valid until that date");
+            assert.strictEqual(actual, expected, "When only a non-today start time exists, the label should show date and time");
+        });
     }
 
     static testGetIncidentPeriodStringUsesUntilLabelWhenOnlyStopTimeExists() {
@@ -99,8 +98,8 @@ class FeedFormattingUtilsTest {
     }
 
     static testGetIncidentPeriodStringFormatsMultiDayWindow() {
-        const startTime = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); 	// 2 days in the future
-        const stopTime = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);	// 3 days in the future
+        const startTime = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
+        const stopTime = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 
         const actual = getIncidentPeriodString(startTime, stopTime);
         const expected = `Giltlig ${this.formatDatePart(startTime)} ${this.formatTimePart(startTime)} -- ${this.formatDatePart(stopTime)} ${this.formatTimePart(stopTime)}`;
@@ -122,6 +121,41 @@ class FeedFormattingUtilsTest {
             minute: "2-digit",
             hour12: false,
         });
+    }
+
+    static withMockedNow(mockedNow, callback) {
+        const RealDate = Date;
+
+        class MockDate extends RealDate {
+            constructor(...args) {
+                if (args.length === 0) {
+                    super(mockedNow.getTime());
+                    return;
+                }
+
+                super(...args);
+            }
+
+            static now() {
+                return mockedNow.getTime();
+            }
+
+            static parse(value) {
+                return RealDate.parse(value);
+            }
+
+            static UTC(...args) {
+                return RealDate.UTC(...args);
+            }
+        }
+
+        global.Date = MockDate;
+
+        try {
+            return callback();
+        } finally {
+            global.Date = RealDate;
+        }
     }
 }
 
