@@ -22,7 +22,7 @@ class FormatDemoFeedTest {
             {
                 published: -10,
                 updated: -5,
-                warningLevel: "Gul",
+                warningLevelText: "Gul",
                 warningStartTime: 15,
                 warningStopTime: 75,
                 title: "Demo warning title",
@@ -41,7 +41,7 @@ class FormatDemoFeedTest {
         this.assertDateNearOffset(formatted.incidentStartTime, 15);
         this.assertDateNearOffset(formatted.incidentStopTime, 75);
 
-        assert.strictEqual(formatted.warningLevel, "Gul", "warningLevel should be mapped");
+        assert.strictEqual(formatted.warningLevelText, "Gul", "warningLevelText should be mapped");
         assert.strictEqual(formatted.incidentTitle, "Demo warning title", "incidentTitle should be mapped");
         assert.strictEqual(formatted.incidentDescription, `${"a".repeat(15)}[...]`, "incidentDescription should respect descriptionMaxLength");
         assert.strictEqual(formatted.affectedArea, "Skane", "affectedArea should be mapped");

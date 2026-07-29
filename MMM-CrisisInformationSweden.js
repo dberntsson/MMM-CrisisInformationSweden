@@ -19,13 +19,14 @@ Module.register("MMM-CrisisInformationSweden", {
     defaults: {
         updateInterval: 30*60*1000,
         uiUpdateInterval: 10*1000,
-        fetchDemoFeed: true,
-
+    
         showDescription: true,
         descriptionMaxLength: 400,
         oldest: 7,
         silent: false,
         filterContent: [],
+
+        fetchDemoFeed: true,
 
         fetchKrisinformationFeed: false,
         krisinformationInterestingAreas: [],

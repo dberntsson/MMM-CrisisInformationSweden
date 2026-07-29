@@ -1,29 +1,30 @@
 {
   "name": "mmm-crisisinformationsweden",
-  "version": "2.0.0",
-  "description": "News feed from the Swedish Government Crisis Information.",
+  "version": "3.0.0",
+  "description": "MagicMirror² module for official Swedish crisis news, weather warnings, and public safety information.",
   "main": "index.js",
   "scripts": {
     "test": "node test/formatSMHIFeed.test.js && node test/formatKrisinformationFeed.test.js && node test/feedFormattingUtils.test.js && node test/formatDemoFeed.test.js && node test/uiDataShape.test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pejjo/MMM-CrisisInformationSweden.git"
+    "url": "https://github.com/dberntsson/MMM-CrisisInformationSweden.git"
   },
   "keywords": [
     "magicmirror",
     "crisis"
   ],
-  "author": "Anders Boghammar <anders@boghammar.com>",
+  "author": "Daniel Berntsson",
   "contributors": [
+    "Anders Boghammar <anders@boghammar.com>",
     "Per Johansson",
     "Kristjan Esperanto"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pejjo/MMM-CrisisInformationSweden/issues"
+    "url": "https://github.com/dberntsson/MMM-CrisisInformationSweden/issues"
   },
-  "homepage": "https://github.com/Pejjo/MMM-CrisisInformationSweden#readme",
+  "homepage": "https://github.com/dberntsson/MMM-CrisisInformationSweden#readme",
   "dependencies": {
         "moment":"^2.30.1"
     }
