@@ -25,6 +25,14 @@ const {
     formatDemoFeed: formatDemoFeedLib,
     filterDemoFeed: filterDemoFeedLib,
 } = require("./lib/demoFeedUtils");
+const {
+    formatTrafikverketFeed: formatTrafikverketFeedLib,
+    filterTrafikverketFeed: filterTrafikverketFeedLib,
+} = require("./lib/trafikverketFeedUtils");
+const {
+    applyTrafikverketRequestVariables,
+    parseHttpRequest,
+} = require("./lib/trafikverketRequestUtils");
 
 module.exports = NodeHelper.create({
     // --------------------------------------- Start the helper
@@ -55,8 +63,11 @@ module.exports = NodeHelper.create({
         if (!this.config.fetchDemoFeed) {
             Log.log("Demo feed disabled by config (fetchDemoFeed=false)");
         }
+        if (!this.config.fetchTrafikverketFeed) {
+            Log.log("Trafikverket feed disabled by config (fetchTrafikverketFeed=false)");
+        }
 
-        const [feed1, feed2, feed3] = await Promise.all([
+        const [feed1, feed2, feed3, feed4] = await Promise.all([
             this.config.fetchKrisinformationFeed
                 ? this.getKrisinformationFeed()
                 : Promise.resolve([]),
@@ -66,9 +77,12 @@ module.exports = NodeHelper.create({
             this.config.fetchDemoFeed
                 ? this.getDemoFeed()
                 : Promise.resolve([]),
+            this.config.fetchTrafikverketFeed
+                ? this.getTrafikverketFeed()
+                : Promise.resolve([]),
         ]);
 
-        const allFeeds = [feed1, feed2, feed3]
+        const allFeeds = [feed1, feed2, feed3, feed4]
             .flatMap((feed) => Array.isArray(feed) ? feed : []);
 
         // Sort the feeds by updatedTime or publishTime in descending order (most recent first)
@@ -139,6 +153,27 @@ module.exports = NodeHelper.create({
         return filteredFeed;
     },
 
+    // --------------------------------------- Retrive feed from Trafikverket.se
+    async getTrafikverketFeed () {
+        const configuredResourcePath = "resources/trafikverket-situation.http";
+        const resourcePath = path.resolve(__dirname, configuredResourcePath);
+        Log.log(`Loading Trafikverket request resource ${resourcePath}`);
+        Log.debug(`   With config: ` + JSON.stringify(this.config));
+
+        let feed = [];
+
+        //validate config.trafikverketAuthenticationKey. if it is empty or undefined or "YOUR-API-KEY", log a warning and return an empty feed
+        if (!this.config.trafikverketAuthenticationKey || this.config.trafikverketAuthenticationKey === "YOUR-API-KEY") {
+            Log.warn("Trafikverket feed disabled due to insufficient config (trafikverketAuthenticationKey is empty or invalid)");
+        } else {
+            feed = await this.fetchTrafikverketFeed(resourcePath);
+        }
+        const formattedFeed = formatTrafikverketFeedLib(feed, this.config);
+        const filteredFeed = filterTrafikverketFeedLib(formattedFeed, this.config);
+        Log.log(`Sending ${filteredFeed.length} (of ${formattedFeed.length}) feed items from Trafikverket to module (NEW_FEED)`);
+        return filteredFeed;
+    },
+
     async fetchFeed (url) {
         try {
             const controller = new AbortController();
@@ -163,6 +198,42 @@ module.exports = NodeHelper.create({
                 this.sendSocketNotification("SERVICE_FAILURE", { message: error.message });
             } else {
                 // Handle other errors
+                this.sendSocketNotification("SERVICE_FAILURE", { message: error.message || "Unknown error" });
+            }
+
+            return [];
+        }
+    },
+
+    async fetchTrafikverketFeed (resourcePath) {
+        try {
+            const fileContent = await fs.readFile(resourcePath, "utf8");
+            const request = parseHttpRequest(applyTrafikverketRequestVariables(fileContent, this.config));
+            Log.debug(`Trafikverket request:\n${JSON.stringify(request)}`);
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout
+            const response = await fetch(request.url, {
+                method: request.method,
+                headers: request.headers,
+                body: request.body,
+                signal: controller.signal,
+            });
+            clearTimeout(timeout);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const feed = await response.json();
+            Log.debug(`${JSON.stringify(feed)}`);
+            return feed;
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                this.sendSocketNotification("SERVICE_FAILURE", { message: "Request timed out" });
+            } else if (error.message && error.message.startsWith("HTTP error!")) {
+                this.sendSocketNotification("SERVICE_FAILURE", { message: error.message });
+            } else {
                 this.sendSocketNotification("SERVICE_FAILURE", { message: error.message || "Unknown error" });
             }
 
@@ -210,6 +281,14 @@ module.exports = NodeHelper.create({
 
     formatDemoFeed (feed) {
         return formatDemoFeedLib(feed);
+    },
+
+    formatTrafikverketFeed (feed, config = {}) {
+        return formatTrafikverketFeedLib(feed, config);
+    },
+
+    filterTrafikverketFeed (feed, config = {}) {
+        return filterTrafikverketFeedLib(feed, config);
     },
 
     // --------------------------------------- Handle notifications

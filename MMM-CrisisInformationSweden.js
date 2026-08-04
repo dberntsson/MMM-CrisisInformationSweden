@@ -19,7 +19,7 @@ Module.register("MMM-CrisisInformationSweden", {
     defaults: {
         updateInterval: 30*60*1000,
         uiUpdateInterval: 10*1000,
-    
+
         showDescription: true,
         descriptionMaxLength: 400,
         oldest: 7,
@@ -36,6 +36,12 @@ Module.register("MMM-CrisisInformationSweden", {
         smhiFeedInterestingAreas: [],
         smhiPreferredLocale: "sv",
         smhiShowWarningLevels: ["YELLOW", "ORANGE", "RED"],
+
+        fetchTrafikverketFeed: false,
+        trafikverketAuthenticationKey: "YOUR-API-KEY",
+        trafikverketCountyNos: "",
+        trafikverketLocationCoordinates: "",
+        trafikverketLocationRadius: 1000,
     },
 
     // --------------------------------------- Define required scripts

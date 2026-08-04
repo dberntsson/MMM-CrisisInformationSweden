@@ -3,6 +3,7 @@
 **MMM-CrisisInformationSweden** is a module for [MagicMirror²](https://magicmirror.builders/) to display important news and warnings from
 * Swedish Government Crisis Information [Krisinformation.se](https://www.krisinformation.se) (feed: [here](https://api.krisinformation.se/v3/news/?includeTest=0&allCounties=True))
 * Swedish Meteorological and Hydrological Institute [SMHI.se](https://www.smhi.se/) (feed: [here](https://opendata-download-warnings.smhi.se/ibww/api/version/1/warning.json))
+* Swedish Transport Administration [Trafikverket.se](https://www.trafikverket.se/) (request file: [resources/trafikverket-situation.http](resources/trafikverket-situation.http))
 
 ## Table of Contents
 - [MMM-CrisisInformationSweden](#mmm-crisisinformationsweden)
@@ -15,6 +16,7 @@
             - [Demo](#demo)
             - [Krisinformation](#krisinformation)
             - [SMHI](#smhi)
+            - [Trafikverket](#trafikverket)
         - [Examples](#examples)
     - [Screenshots](#screenshots)
 
@@ -68,6 +70,15 @@ Run `git pull` inside `../modules/MMM-CrisisInformationSweden/` directory.
 |smhiPreferredLocale|"sv"|Preferred locale for localized SMHI content. The formatter will try this locale first, then fall back to English (en) and finally to a default value ("").|
 |smhiShowWarningLevels|["YELLOW", "ORANGE", "RED"]|A list of warning levels you are interested in. Defined and available levels: `MESSAGE`, `YELLOW`, `ORANGE`, `RED`|
 
+#### Trafikverket
+| Key | Default value | Description |
+|---|---|---|
+|fetchTrafikverketFeed|false|If traffic situations from Trafikverket should be fetched|
+|trafikverketAuthenticationKey|"YOUR-API-KEY"|Authentication key for Trafikverket requests|
+|trafikverketCountyNos|""|Comma-separated county numbers to include in the Trafikverket request, for example "0,12,13,14"|
+|trafikverketLocationCoordinates|""|SWEREF99TM formatted coordinates pointing out the center of your geografical interest. [Convert to SWEREF99TM using this tool.](https://latlong.mellifica.se), for example "374058 6164393" *(Both `trafikverketLocationCoordinates` and `trafikverketLocationRadius` need to be configured for the filter to be added.)*|
+|trafikverketLocationRadius|1000|Radius from `trafikverketLocationCoordinates` where your geographical interest is. *(Both `trafikverketLocationCoordinates` and `trafikverketLocationRadius` need to be configured for the filter to be added.)*|
+
 ### Examples
 Here is an example for an entry in the modules array in your `config.js`:
 
@@ -96,6 +107,12 @@ Here is an example for an entry in the modules array in your `config.js`:
         smhiFeedInterestingAreas: [],
         preferredLocale: "sv",
         smhiShowWarningLevels: ["MESSAGE", "YELLOW", ORANGE", "RED"],
+
+        fetchTrafikverketFeed: true,
+        trafikverketAuthenticationKey: "YOUR-API-KEY",
+        trafikverketCountyNos: "0,12",
+        trafikverketLocationCoordinates: "374058 6164393",
+        trafikverketLocationRadius: 1000
 }
 },
 ```
@@ -113,6 +130,9 @@ Here is an example for an entry in the modules array in your `config.js`:
 
         fetchSMHIFeed: true,
         smhiFeedInterestingAreas: ["Skåne län"],
+
+        fetchTrafikverketFeed: true,
+        trafikverketAuthenticationKey: "YOUR-API-KEY"
     }
 },
 ```
@@ -133,6 +153,11 @@ Here is an example for an entry in the modules array in your `config.js`:
 
         fetchSMHIFeed: true,
         smhiFeedInterestingAreas: ["Skåne län"],
+
+        fetchTrafikverketFeed: true,
+        trafikverketAuthenticationKey: "YOUR-API-KEY",
+        trafikverketLocationCoordinates: "374058 6164393",
+        trafikverketLocationRadius: 1000
     }
 },
 ```

@@ -1,10 +1,10 @@
 {
   "name": "mmm-crisisinformationsweden",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "MagicMirror² module for official Swedish crisis news, weather warnings, and public safety information.",
   "main": "index.js",
   "scripts": {
-    "test": "node test/formatSMHIFeed.test.js && node test/formatKrisinformationFeed.test.js && node test/feedFormattingUtils.test.js && node test/formatDemoFeed.test.js && node test/uiDataShape.test.js"
+    "test": "node test/formatSMHIFeed.test.js && node test/formatKrisinformationFeed.test.js && node test/feedFormattingUtils.test.js && node test/formatDemoFeed.test.js && node test/trafikverketRequestUtils.test.js && node test/formatTrafikverketFeed.test.js && node test/uiDataShape.test.js"
   },
   "repository": {
     "type": "git",
