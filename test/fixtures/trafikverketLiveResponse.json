@@ -1,0 +1,261 @@
+HTTP/1.1 200 OK
+Content-Length: 1358
+Content-Type: application/json; charset=utf-8
+Content-Encoding: gzip
+Server: Microsoft-IIS/10.0
+RateLimit-Policy: 100;w=1
+FromInternalCache: False
+X-Powered-By: ASP.NET
+Date: Thu, 30 Jul 2026 14:46:13 GMT
+Strict-Transport-Security: max-age=157680000
+
+{
+  "RESPONSE": {
+    "RESULT": [
+      {
+        "Situation": [
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trollhättans stad",
+                "EndTime": "2026-08-29T16:00:00.000+02:00",
+                "Message": "Men anledning av Alliansloppet, tävling rullskidor, är södergående färdriktning avstängt mellan Vårviksvägen och Malgöbron under några timmar. Alternativ väg är via Stridsbergsbron. ",
+                "MessageCode": "Evenemang",
+                "MessageCodeValue": "majorEvent",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "PublicEvent",
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-08-29T12:00:00.000+02:00",
+                "LocationDescriptor": "Vänersborgsvägen i Trollhättans kommun i Västra Götalands län, i båda riktningar."
+              },
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trollhättans stad",
+                "EndTime": "2026-08-29T16:00:00.000+02:00",
+                "Message": "Men anledning av Alliansloppet, tävling rullskidor, är södergående färdriktning avstängt mellan Vårviksvägen och Malgöbron under några timmar. Alternativ väg är via Stridsbergsbron. ",
+                "MessageCode": "Vägen avstängd",
+                "MessageCodeValue": "roadClosed",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "RoadOrCarriagewayOrLaneManagement",
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-08-29T12:00:00.000+02:00",
+                "LocationDescriptor": "Vänersborgsvägen i Trollhättans kommun i Västra Götalands län, i båda riktningar."
+              }
+            ],
+            "PublicationTime": "2026-06-08T14:16:46.992+02:00",
+            "ModifiedTime": "2026-06-08T12:16:47.157Z"
+          },
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-30T18:00:00.000+02:00",
+                "Message": "Rättvik Classic Car Week pågår Fredag 24/7 - Torsdag 30/7. För mer information besök: classicarweek.com Skyltad omledning för genomfartstrafikanter finns på plats.",
+                "MessageCode": "Evenemang",
+                "MessageCodeValue": "majorEvent",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "PublicEvent",
+                "NumberOfLanesRestricted": 1,
+                "RoadNumber": "Väg 70",
+                "RoadNumberNumeric": 70,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-24T18:00:00.000+02:00",
+                "LocationDescriptor": "Väg 70 från Cirkulationsplats Rättvik Vasagatan till Rättviks Naturbruksgymnasium båda riktningarna i Dalarnas Län (W)",
+                "TrafficRestrictionType": "Körfält blockerade"
+              }
+            ],
+            "PublicationTime": "2026-07-24T23:08:29.844+02:00",
+            "ModifiedTime": "2026-07-24T21:08:29.999Z"
+          },
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-31T10:10:00.000+02:00",
+                "MessageCode": "Broöppning",
+                "MessageCodeValue": "bridgeSwingInOperation",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "GeneralNetworkManagement",
+                "RoadNumber": "Väg 261",
+                "RoadNumberNumeric": 261,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-31T10:00:00.000+02:00",
+                "LocationDescriptor": "Väg 261 vid Nockebybron båda riktningarna i Stockholms län (AB)"
+              },
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-31T10:10:00.000+02:00",
+                "MessageCode": "Vägen avstängd",
+                "MessageCodeValue": "roadClosed",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "RoadOrCarriagewayOrLaneManagement",
+                "RoadNumber": "Väg 261",
+                "RoadNumberNumeric": 261,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-31T10:00:00.000+02:00",
+                "LocationDescriptor": "Väg 261 vid Nockebybron båda riktningarna i Stockholms län (AB)"
+              }
+            ],
+            "PublicationTime": "2026-07-30T10:24:46.835+02:00",
+            "ModifiedTime": "2026-07-30T08:24:46.934Z"
+          },
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-31T11:10:00.000+02:00",
+                "MessageCode": "Broöppning",
+                "MessageCodeValue": "bridgeSwingInOperation",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "GeneralNetworkManagement",
+                "RoadNumber": "Väg 261",
+                "RoadNumberNumeric": 261,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-31T11:00:00.000+02:00",
+                "LocationDescriptor": "Väg 261 vid Nockebybron båda riktningarna i Stockholms län (AB)"
+              },
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-31T11:10:00.000+02:00",
+                "MessageCode": "Vägen avstängd",
+                "MessageCodeValue": "roadClosed",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "RoadOrCarriagewayOrLaneManagement",
+                "RoadNumber": "Väg 261",
+                "RoadNumberNumeric": 261,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-31T11:00:00.000+02:00",
+                "LocationDescriptor": "Väg 261 vid Nockebybron båda riktningarna i Stockholms län (AB)"
+              }
+            ],
+            "PublicationTime": "2026-07-30T10:22:56.008+02:00",
+            "ModifiedTime": "2026-07-30T08:22:56.144Z"
+          },
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-31T12:10:00.000+02:00",
+                "MessageCode": "Broöppning",
+                "MessageCodeValue": "bridgeSwingInOperation",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "GeneralNetworkManagement",
+                "RoadNumber": "Väg 261",
+                "RoadNumberNumeric": 261,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-31T12:00:00.000+02:00",
+                "LocationDescriptor": "Väg 261 vid Nockebybron båda riktningarna i Stockholms län (AB)"
+              },
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-31T12:10:00.000+02:00",
+                "MessageCode": "Vägen avstängd",
+                "MessageCodeValue": "roadClosed",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "RoadOrCarriagewayOrLaneManagement",
+                "RoadNumber": "Väg 261",
+                "RoadNumberNumeric": 261,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-31T12:00:00.000+02:00",
+                "LocationDescriptor": "Väg 261 vid Nockebybron båda riktningarna i Stockholms län (AB)"
+              }
+            ],
+            "PublicationTime": "2026-07-30T10:23:56.511+02:00",
+            "ModifiedTime": "2026-07-30T08:23:56.583Z"
+          },
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-30T17:30:00.000+02:00",
+                "Message": "Vägen avstängd. Singelolycka med personbil söder om Torsås. ",
+                "MessageCode": "Olycka",
+                "MessageCodeValue": "accident",
+                "MessageType": "Olycka",
+                "MessageTypeValue": "Accident",
+                "RoadNumber": "Väg 513",
+                "RoadNumberNumeric": 513,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-30T16:07:13.000+02:00",
+                "LocationDescriptor": "Väg 513 från Länsgr. Kalmar/Blekinge län vid Flyeryd till Juanslycke båda riktningarna i Kalmar län (H)"
+              },
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-30T17:30:00.000+02:00",
+                "Message": "Vägen avstängd. Singelolycka med personbil söder om Torsås. ",
+                "MessageCode": "Vägen avstängd",
+                "MessageCodeValue": "roadClosed",
+                "MessageType": "Trafikmeddelande",
+                "MessageTypeValue": "RoadOrCarriagewayOrLaneManagement",
+                "RoadNumber": "Väg 513",
+                "RoadNumberNumeric": 513,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-30T16:07:13.000+02:00",
+                "LocationDescriptor": "Väg 513 från Länsgr. Kalmar/Blekinge län vid Flyeryd till Juanslycke båda riktningarna i Kalmar län (H)"
+              }
+            ],
+            "PublicationTime": "2026-07-30T16:14:05.877+02:00",
+            "ModifiedTime": "2026-07-30T14:14:06.009Z"
+          },
+          {
+            "Deviation": [
+              {
+                "AffectedDirection": "Båda riktningarna",
+                "AffectedDirectionValue": "BothDirections",
+                "Creator": "Trafikverket",
+                "EndTime": "2026-07-30T17:30:00.000+02:00",
+                "Message": "Trafikolycka med flera fordon öster om Nässjö. ",
+                "MessageCode": "Olycka",
+                "MessageCodeValue": "accident",
+                "MessageType": "Olycka",
+                "MessageTypeValue": "Accident",
+                "NumberOfLanesRestricted": 1,
+                "RoadNumber": "Väg 31",
+                "RoadNumberNumeric": 31,
+                "SeverityCode": 5,
+                "SeverityText": "Mycket stor påverkan",
+                "StartTime": "2026-07-30T16:20:09.000+02:00",
+                "LocationDescriptor": "Väg 31 från Cirkulationsplats Gisshult till Gisshult båda riktningarna i Jönköpings län (F)",
+                "TrafficRestrictionType": "Körfält blockerade"
+              }
+            ],
+            "PublicationTime": "2026-07-30T16:45:53.171+02:00",
+            "ModifiedTime": "2026-07-30T14:45:53.299Z"
+          }
+        ]
+      }
+    ]
+  }
+}

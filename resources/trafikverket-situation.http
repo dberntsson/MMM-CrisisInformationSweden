@@ -2,32 +2,54 @@ POST https://api.trafikinfo.trafikverket.se/v2/data.json HTTP/1.1
 content-type: application/xml
 
 <REQUEST>
-  <LOGIN authenticationkey="demokey" />
-  <QUERY objecttype="Situation" namespace="road.trafficinfo" schemaversion="1.6" limit="10">
+  <LOGIN authenticationkey="{{ trafikverketAuthenticationKey }}" />
+  <QUERY objecttype="Situation" namespace="road.trafficinfo" schemaversion="1.6" limit="20" includedeletedobjects="false">
 	<FILTER>
       <AND>
+        <!-- Generiska kriterier -->
         <EQ name="CountryCode" value="SE" />
-		<EQ name="Deleted" value="false" />
-		<!--EQ name="Deviation.Suspended" value="false" /-->
-        <!--IN name="Deviation.CountyNo" value="{{trafikverketCountyNos}}" /-->
-        <IN name="Deviation.CountyNo" value="12" />
-		<GTE name="Deviation.SeverityCode" value="5" />
-		<IN name="Deviation.MessageCode" value="Beläggningsarbete,Vägarbete" />
+		    <EQ name="Deleted" value="false" />
+        
+        <!-- Kriterier för typ av situationer
+        
+        * Samtliga MessageType
+          * Viktig trafikinformation,Färjor,Hinder, Olycka, Restriktion, Trafikmeddelande, Vägarbete
+        * Förslag på MessageType att ha som default filter
+          * Viktig trafikinformation,       Hinder, Olycka, Restriktion, Trafikmeddelande
+        -->
+		    <GTE name="Deviation.SeverityCode" value="5" />
+		    <NOTIN name="Deviation.MessageType" value="Färjor,Vägarbete" />
+        
+        <!-- Geografiska kriterier -->
+        <IN name="Deviation.CountyNo" value="{{ trafikverketCountyNos }}" />
+        <WITHIN name="Deviation.Geometry.Point.SWEREF99TM" shape="center" value="{{ trafikverketLocationCoordinates }}" radius="{{ trafikverketLocationRadius }}" />
       </AND>
     </FILTER>
+    
     <INCLUDE>PublicationTime</INCLUDE>
-	<INCLUDE>ModifiedTime</INCLUDE>
+	  <INCLUDE>ModifiedTime</INCLUDE>
     <INCLUDE>Deviation.Creator</INCLUDE>
-	<INCLUDE>Deviation.StartTime</INCLUDE>
-	<INCLUDE>Deviation.EndTime</INCLUDE>
+	  <INCLUDE>Deviation.StartTime</INCLUDE>
+	  <INCLUDE>Deviation.EndTime</INCLUDE>
     <INCLUDE>Deviation.Schedule.StartOfPeriod</INCLUDE>
-	<INCLUDE>Deviation.Schedule.EndOfPeriod</INCLUDE>
+	  <INCLUDE>Deviation.Schedule.EndOfPeriod</INCLUDE>
+
     <INCLUDE>Deviation.Header</INCLUDE>
-	<INCLUDE>Deviation.MessageCode</INCLUDE>
-	<INCLUDE>Deviation.MessageType</INCLUDE>
-    <INCLUDE>Deviation.Message</INCLUDE>
-	<INCLUDE>Deviation.SeverityCode</INCLUDE>
+	  <INCLUDE>Deviation.Message</INCLUDE>
+    <INCLUDE>Deviation.MessageCode</INCLUDE>
+    <INCLUDE>Deviation.MessageCodeValue</INCLUDE>
+	  <INCLUDE>Deviation.MessageType</INCLUDE>
+    <INCLUDE>Deviation.MessageTypeValue</INCLUDE>
+	  <INCLUDE>Deviation.SeverityCode</INCLUDE>
     <INCLUDE>Deviation.SeverityText</INCLUDE>
+    
     <INCLUDE>Deviation.LocationDescriptor</INCLUDE>
+    <INCLUDE>Deviation.RoadNumber</INCLUDE>
+    <INCLUDE>Deviation.RoadNumberNumeric</INCLUDE>
+    <INCLUDE>Deviation.TrafficRestrictionType</INCLUDE>
+    <INCLUDE>Deviation.AffectedDirection</INCLUDE>
+    <INCLUDE>Deviation.AffectedDirectionValue</INCLUDE>
+    <INCLUDE>Deviation.NumberOfLanesRestricted</INCLUDE>
+
   </QUERY>
 </REQUEST>

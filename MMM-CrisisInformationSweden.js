@@ -36,9 +36,12 @@ Module.register("MMM-CrisisInformationSweden", {
         smhiFeedInterestingAreas: [],
         smhiPreferredLocale: "sv",
         smhiShowWarningLevels: ["YELLOW", "ORANGE", "RED"],
+
         fetchTrafikverketFeed: false,
-        trafikverketCountyNos: "12",
-        trafikverketSituationResourcePath: "resources/trafikverket-situation.http",
+        trafikverketAuthenticationKey: "YOUR-API-KEY",
+        trafikverketCountyNos: "",
+        trafikverketLocationCoordinates: "",
+        trafikverketLocationRadius: 1000,
     },
 
     // --------------------------------------- Define required scripts

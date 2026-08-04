@@ -29,63 +29,10 @@ const {
     formatTrafikverketFeed: formatTrafikverketFeedLib,
     filterTrafikverketFeed: filterTrafikverketFeedLib,
 } = require("./lib/trafikverketFeedUtils");
-
-const applyTrafikverketRequestVariables = (fileContent, config = {}) => {
-    const countyNoConfig = config.trafikverketCountyNos;
-    const normalizedCountyNos = Array.isArray(countyNoConfig)
-        ? countyNoConfig
-            .map((value) => String(value).trim())
-            .filter(Boolean)
-            .join(",")
-        : String(countyNoConfig ?? "").trim();
-
-    return fileContent.replace(/\{\{\s*trafikverketCountyNos\s*\}\}/gi, normalizedCountyNos);
-};
-
-const parseHttpRequest = (fileContent) => {
-    const lines = fileContent.split(/\r?\n/);
-    const requestLineIndex = lines.findIndex((line) => line.trim() !== "");
-
-    if (requestLineIndex === -1) {
-        throw new Error("HTTP request file is empty");
-    }
-
-    const requestLine = lines[requestLineIndex].trim();
-    const requestMatch = requestLine.match(/^(POST|GET|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+(\S+)\s+HTTP\/\d\.\d$/i);
-
-    if (!requestMatch) {
-        throw new Error(`Invalid HTTP request line: ${requestLine}`);
-    }
-
-    const headers = {};
-    let currentLine = requestLineIndex + 1;
-
-    while (currentLine < lines.length && lines[currentLine].trim() !== "") {
-        const headerLine = lines[currentLine];
-        const separatorIndex = headerLine.indexOf(":");
-
-        if (separatorIndex > 0) {
-            const headerName = headerLine.slice(0, separatorIndex).trim();
-            const headerValue = headerLine.slice(separatorIndex + 1).trim();
-            headers[headerName] = headerValue;
-        }
-
-        currentLine += 1;
-    }
-
-    while (currentLine < lines.length && lines[currentLine].trim() === "") {
-        currentLine += 1;
-    }
-
-    const body = lines.slice(currentLine).join("\n").trim();
-
-    return {
-        method: requestMatch[1].toUpperCase(),
-        url: requestMatch[2],
-        headers,
-        body: body.length > 0 ? body : undefined,
-    };
-};
+const {
+    applyTrafikverketRequestVariables,
+    parseHttpRequest,
+} = require("./lib/trafikverketRequestUtils");
 
 module.exports = NodeHelper.create({
     // --------------------------------------- Start the helper
@@ -208,15 +155,22 @@ module.exports = NodeHelper.create({
 
     // --------------------------------------- Retrive feed from Trafikverket.se
     async getTrafikverketFeed () {
-        const configuredResourcePath = this.config.trafikverketSituationResourcePath || "resources/trafikverket-situation.http";
+        const configuredResourcePath = "resources/trafikverket-situation.http";
         const resourcePath = path.resolve(__dirname, configuredResourcePath);
         Log.log(`Loading Trafikverket request resource ${resourcePath}`);
         Log.debug(`   With config: ` + JSON.stringify(this.config));
 
-        const feed = await this.fetchTrafikverketFeed(resourcePath);
+        let feed = [];
+
+        //validate config.trafikverketAuthenticationKey. if it is empty or undefined or "YOUR-API-KEY", log a warning and return an empty feed
+        //TODO validate trafikverket config parameters (countyNos, locationCoordinates, locationRadius) and log a warning if a combination of them is invalid
+        if (!this.config.trafikverketAuthenticationKey || this.config.trafikverketAuthenticationKey === "YOUR-API-KEY") {
+            Log.warn("Trafikverket feed disabled due to insufficient config (trafikverketAuthenticationKey is empty or invalid)");
+        } else {
+            feed = await this.fetchTrafikverketFeed(resourcePath);
+        }
         const formattedFeed = formatTrafikverketFeedLib(feed, this.config);
         const filteredFeed = filterTrafikverketFeedLib(formattedFeed, this.config);
-
         Log.log(`Sending ${filteredFeed.length} (of ${formattedFeed.length}) feed items from Trafikverket to module (NEW_FEED)`);
         return filteredFeed;
     },
@@ -256,6 +210,7 @@ module.exports = NodeHelper.create({
         try {
             const fileContent = await fs.readFile(resourcePath, "utf8");
             const request = parseHttpRequest(applyTrafikverketRequestVariables(fileContent, this.config));
+            Log.debug(`Trafikverket request:\n${JSON.stringify(request)}`);
 
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout

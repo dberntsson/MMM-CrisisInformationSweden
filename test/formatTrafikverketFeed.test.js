@@ -5,6 +5,7 @@ class FormatTrafikverketFeedTest {
     static run() {
         console.log("Running Trafikverket feed tests...");
         this.testFormatsNestedResponseIntoUiShape();
+        this.testNormalizesMultipleDeviationsIntoOneUiItem();
         this.testSkipsSituationsWithoutDeviationEntries();
         this.testFiltersByContentAndWarningRelevance();
         console.log("All Trafikverket feed tests passed.");
@@ -47,6 +48,62 @@ class FormatTrafikverketFeedTest {
         assert.strictEqual(formattedEntry.incidentDescription, "Ett körfält är avstängt.");
         assert.strictEqual(formattedEntry.affectedAreaDetails, "E4 vid Södertälje");
         assert.strictEqual(formattedEntry.origin, "Trafikverket");
+    }
+
+    static testNormalizesMultipleDeviationsIntoOneUiItem() {
+        const publishTime = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+        const updatedTime = new Date(Date.now() - 45 * 60 * 1000).toISOString();
+        const startTime = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+        const laterStartTime = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+        const endTime = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString();
+        const laterEndTime = new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString();
+
+        const payload = {
+            RESPONSE: {
+                RESULT: [{
+                    Situation: [{
+                        PublicationTime: publishTime,
+                        ModifiedTime: updatedTime,
+                        Deviation: [
+                            {
+                                Creator: "Trafikverket",
+                                StartTime: startTime,
+                                EndTime: endTime,
+                                MessageCode: "Broöppning",
+                                Message: "Gemensam beskrivning",
+                                SeverityCode: 3,
+                                SeverityText: "Stor påverkan",
+                                LocationDescriptor: "Väg 261 vid Nockebybron",
+                            },
+                            {
+                                Creator: "Trafikverket",
+                                StartTime: laterStartTime,
+                                EndTime: laterEndTime,
+                                MessageCode: "Vägen avstängd",
+                                Message: "Gemensam beskrivning",
+                                SeverityCode: 5,
+                                SeverityText: "Mycket stor påverkan",
+                                LocationDescriptor: "Väg 261 vid Nockebybron",
+                            },
+                        ],
+                    }],
+                }],
+            },
+        };
+
+        const formatted = formatTrafikverketFeed(payload, { descriptionMaxLength: 400 });
+
+        assert.strictEqual(formatted.length, 1, "Multiple deviations in one situation should normalize into one UI item");
+        assert.strictEqual(formatted[0].publishTime, publishTime);
+        assert.strictEqual(formatted[0].updatedTime, updatedTime);
+        assert.strictEqual(formatted[0].warningLevelCode, 5);
+        assert.strictEqual(formatted[0].warningLevelText, "Mycket stor påverkan");
+        assert.strictEqual(formatted[0].incidentStartTime, startTime);
+        assert.strictEqual(formatted[0].incidentStopTime, laterEndTime);
+        assert.strictEqual(formatted[0].incidentTitle, "Broöppning / Vägen avstängd");
+        assert.strictEqual(formatted[0].incidentDescription, "Gemensam beskrivning");
+        assert.strictEqual(formatted[0].affectedAreaDetails, "Väg 261 vid Nockebybron");
+        assert.strictEqual(formatted[0].origin, "Trafikverket");
     }
 
     static testSkipsSituationsWithoutDeviationEntries() {
