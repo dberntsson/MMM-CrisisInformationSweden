@@ -163,7 +163,6 @@ module.exports = NodeHelper.create({
         let feed = [];
 
         //validate config.trafikverketAuthenticationKey. if it is empty or undefined or "YOUR-API-KEY", log a warning and return an empty feed
-        //TODO validate trafikverket config parameters (countyNos, locationCoordinates, locationRadius) and log a warning if a combination of them is invalid
         if (!this.config.trafikverketAuthenticationKey || this.config.trafikverketAuthenticationKey === "YOUR-API-KEY") {
             Log.warn("Trafikverket feed disabled due to insufficient config (trafikverketAuthenticationKey is empty or invalid)");
         } else {

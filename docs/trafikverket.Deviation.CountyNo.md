@@ -1,4 +1,4 @@
-| ContyCode | Beskrivning |
+| CountyNo | Beskrivning |
 |---|---|
 |0|Alla län (kan förekomma för poster med Deviation.MessageType="Viktig trafikinformation" och meddelandet gäller då för hela Sverige)|
 |1|Stockholms län|

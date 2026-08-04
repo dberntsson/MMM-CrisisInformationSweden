@@ -16,6 +16,7 @@
             - [Demo](#demo)
             - [Krisinformation](#krisinformation)
             - [SMHI](#smhi)
+            - [Trafikverket](#trafikverket)
         - [Examples](#examples)
     - [Screenshots](#screenshots)
 
@@ -74,7 +75,7 @@ Run `git pull` inside `../modules/MMM-CrisisInformationSweden/` directory.
 |---|---|---|
 |fetchTrafikverketFeed|false|If traffic situations from Trafikverket should be fetched|
 |trafikverketAuthenticationKey|"YOUR-API-KEY"|Authentication key for Trafikverket requests|
-|trafikverketCountyNos|""|Comma-separated county numbers to include in the Trafikverket request, for example "12,13,14"|
+|trafikverketCountyNos|""|Comma-separated county numbers to include in the Trafikverket request, for example "0,12,13,14"|
 |trafikverketLocationCoordinates|""|SWEREF99TM formatted coordinates pointing out the center of your geografical interest. [Convert to SWEREF99TM using this tool.](https://latlong.mellifica.se), for example "374058 6164393" *(Both `trafikverketLocationCoordinates` and `trafikverketLocationRadius` need to be configured for the filter to be added.)*|
 |trafikverketLocationRadius|1000|Radius from `trafikverketLocationCoordinates` where your geographical interest is. *(Both `trafikverketLocationCoordinates` and `trafikverketLocationRadius` need to be configured for the filter to be added.)*|
 
@@ -109,7 +110,7 @@ Here is an example for an entry in the modules array in your `config.js`:
 
         fetchTrafikverketFeed: true,
         trafikverketAuthenticationKey: "YOUR-API-KEY",
-        trafikverketCountyNos: "12",
+        trafikverketCountyNos: "0,12",
         trafikverketLocationCoordinates: "374058 6164393",
         trafikverketLocationRadius: 1000
 }
